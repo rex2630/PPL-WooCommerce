@@ -1,0 +1,26 @@
+{
+    "name": "react-settings-page",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "wp-scripts build",
+        "start": "wp-scripts start",
+        "generate": "openapi-typescript ../../schema.json > ./src/schema.d.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/jquery": "^3.5.30",
+        "typescript": "^5.4.5",
+        "ts-loader": "^9.5.1",
+        "@wordpress/scripts": "^25.4.0",
+        "@wordpress/element": "^5.33.0",
+        "react-hook-form": "^7.51.3",
+        "json-schema-to-typescript": "^14.0.4",
+        "openapi-typescript": "^6.7.5",
+        "@wordpress/data": "^9.27.0"
+    },
+    "typings": "types.d.ts"
+}

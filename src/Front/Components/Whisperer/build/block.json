@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "pplcz/whisperer-shop-block",
+  "version": "1.0.0",
+  "title": "Selection block",
+  "category": "Whisperer",
+  "parent": [
+    "woocommerce/checkout-contact-information-block"
+  ],
+  "attributes": {
+    "lock": {
+      "type": "object",
+      "default": {
+        "remove": true,
+        "move": false
+      }
+    }
+  },
+  "textdomain": "checkout-block-example",
+  "editorScript": "file:./build/index.js"
+}

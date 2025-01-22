@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "pplcz/parcel-shop-summary-block",
+	"version": "1.0.0",
+	"title": "Selection block",
+	"category": "woocommerce",
+    "parent": [ "woocommerce/checkout-order-summary-block", "woocommerce/cart-order-summary-block"],
+	"attributes": {
+		"lock": {
+			"type": "object",
+			"default": {
+				"remove": true,
+				"move": false
+			}
+		}
+	},
+	"textdomain": "checkout-block-example",
+	"editorScript": "file:./build/index.js"
+}
