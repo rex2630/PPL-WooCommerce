@@ -38,7 +38,7 @@ PPL Plugin pro WooCommerce je praktický nástroj, který umožňuje snadnou int
 
 ## Instalace
 
-1. Stáhněte si plugin z [našeho webu](https://www.ppl.cz/jak-zacit#plugin).
+1. Stáhněte si plugin z našeho github repozitáře.
 2. Nainstalujte a aktivujte plugin v administraci WordPress (WooCommerce > Pluginy > Přidat nový).
 3. Přejděte do sekce **PPL Plugin** v levém menu administrace a proveďte potřebná nastavení.
 
