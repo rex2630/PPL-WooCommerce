@@ -35,8 +35,7 @@ class BlockData {
     }
 
     public static function cb_schema_callback() {
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-        $decoded = json_decode(file_get_contents(__DIR__ . '/../../../schema.json'), true);
+        $decoded = wp_json_file_decode(__DIR__ . '/../../../schema.json',  ["associative"=>true]);
         $properties = $decoded["components"]["schemas"]["ParcelDataModel"];
         return $properties;
     }

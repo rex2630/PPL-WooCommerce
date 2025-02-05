@@ -141,7 +141,7 @@ class OrderFilter {
                 Validator::getInstance()->validate($shipment, $errors, "");
                 if ($errors->errors) {
                     $hasError = true;
-                    set_transient(pplcz_create_name("bulk_create_label_" . get_current_user_id()), esc_html(__('Při vytváření zásilek byly nalezeny chyby', "ppl-cz")), 60);
+                    set_transient(pplcz_create_name("bulk_create_label_" . get_current_user_id()), esc_html__('Při vytváření zásilek byly nalezeny chyby', "ppl-cz"), 60);
                 }
 
             }
@@ -166,7 +166,7 @@ class OrderFilter {
                     $operation->createPackages($shipments);
                 }
                 catch (\Exception $ex) {
-                    set_transient(pplcz_create_name("bulk_create_label_" . get_current_user_id()), esc_html(__("Vznikl problém při vytváření zásilky", "ppl-cz")), 60);
+                    set_transient(pplcz_create_name("bulk_create_label_" . get_current_user_id()), esc_html__("Vznikl problém při vytváření zásilky", "ppl-cz"), 60);
                 }
             }
 

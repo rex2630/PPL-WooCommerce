@@ -58,6 +58,4 @@ if (isset($shipping_address) && $shipping_address) {
 
     <?php } ?>
     <input type="hidden" name="pplcz_parcelshop" value='<?php echo esc_html($content) ?>'>
-    <input type="hidden" name="pplcz_nonce" value="<?php echo esc_html($nonce) ?>">
-
 </div>

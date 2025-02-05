@@ -86,8 +86,7 @@ abstract class ModelValidator {
 
     public function isZip($countryCode, $zip)
     {
-        $content =<<<ZIPEOL
-GB ^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {1,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$
+        $content ="GB ^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {1,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$
 CZ ^[1-7]\d{2}[ ]?\d{2}$
 DE ^\d{5}$
 SK ^[8|9|0]\d{2}[ ]?\d{2}$
@@ -119,10 +118,9 @@ HR ^\d{5}$
 CY ^\d{4}$
 IE ^.+$
 USA ^.+$
-CN ^.+$
-ZIPEOL;
+CN ^.+$";
 
-        $zips = preg_split("~\r?\n~", $content);
+        $zips = array_filter(array_map("trim", preg_split("~\r?\n~", $content)));
         $zips = array_map(function ($item) {
             if (preg_match('~([A-Z]{2}) (.+)~', $item, $args))
             {

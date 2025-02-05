@@ -51,7 +51,7 @@ class FileDownload {
                     $downloadLabel = new CPLOperation();
                     $packageData = new PackageData($shipmentId);
                     if (!$packageData->get_id())
-                        wp_die(esc_html(__('Soubor nebyl nalezen.', 'ppl-cz')));
+                        wp_die(esc_html__('Soubor nebyl nalezen.', 'ppl-cz'));
                     $shipmentId = $packageData->get_ppl_shipment_id();
                     $shipmentData = new ShipmentData($shipmentId);
                     $downloadLabel->getLabelContents($shipmentData->get_batch_id(), $shipmentData->get_reference_id(), $packageData->get_shipment_number(), $wp_query->query_vars['pplcz_print']);

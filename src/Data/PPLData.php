@@ -55,7 +55,7 @@ abstract class PPLData extends \WC_Data
             }
             return $values;
         }
-        throw new \Exception(esc_html(__("Zamknutý záznam", "ppl-cz")));
+        throw new \Exception(esc_html__("Zamknutý záznam", "ppl-cz"));
     }
 
 

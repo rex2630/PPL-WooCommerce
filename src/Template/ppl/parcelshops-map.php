@@ -12,9 +12,6 @@ defined("WPINC") or die();
 <?php wp_body_open(); ?>
 <div id="ppl-parcelshop-map" <?php
 foreach (pplcz_map_args() as $key => $value) {
-    $key = esc_html($key);
-    $value = esc_html($value);
-
     echo " " . esc_html($key) . "=\"" . esc_html($value) ."\"";
 }
 ?> >

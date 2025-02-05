@@ -192,27 +192,6 @@ class ShipmentMethod extends \WC_Shipping_Method {
 
         $zones = \WC_Shipping_Zones::get_zones();
         $currencies  = include __DIR__ . '/config/currencies.php';
-        /*
-                foreach ($zones as $zone) {
-                    foreach ($zone['shipping_methods'] as $method) {
-                        if ($method->instance_id == $this->instance_id
-                            && $method->id === $this->id) {
-                            $codes = array_filter(array_map(function($stdClass) {
-                                if ($stdClass->type === "postcode")
-                                    return null;
-                                return $stdClass->code;
-                            }, $zone["zone_locations"]));
-
-                            if ($codes) {
-                                foreach (array_diff(array_keys($currencies), $codes) as $code) {
-                                    unset($currencies[$code]);
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-        */
 
         $form_fields["priceWithDph"] = array(
             'title'       => esc_html__('Cena je s DPH', 'ppl-cz' ),
@@ -221,9 +200,9 @@ class ShipmentMethod extends \WC_Shipping_Method {
             'desc_tip'    => true
         );
 
-        $basecurrency = get_woocommerce_currency();
-
         foreach (array_unique(array_merge([ get_option( 'woocommerce_currency' )],array_values($currencies))) as $currency) {
+            $currency_safe = esc_html__($currency);
+
             $form_fields["cost_allow_{$currency}"] = array(
                 'title'       => esc_html__("Povolení měny", 'ppl-cz' ),
                 'type'        => 'checkbox',
@@ -231,16 +210,8 @@ class ShipmentMethod extends \WC_Shipping_Method {
                 'default'     => '',
                 'desc_tip'    => true
             );
-/*
-            $form_fields["cost_automatic_recalculation_{$currency}"] = array(
-                'title'       => esc_html__("Ceny jsou v základní měně", 'ppl-cz' ),
-                'type'        => 'checkbox',
-                'description' => esc_html__("Ceny jsou v základní měně, přepočítává jiný plugin", 'ppl-cz'  ),
-                'default'     => '',
-                'desc_tip'    => true
-            );
-*/
-            $text_safe = esc_html__("Cena za dopravu", 'ppl-cz' ) . " <span class='shipment-price-original'>(v {$currency})</span>";
+
+            $text_safe = esc_html__("Cena za dopravu", 'ppl-cz' ) . " <span class='shipment-price-original'>(v {$currency_safe})</span>";
 
             $form_fields["cost_{$currency}"] = array(
                 'title'       => $text_safe,
@@ -250,8 +221,10 @@ class ShipmentMethod extends \WC_Shipping_Method {
                 'desc_tip'    => true
             );
 
+
+
             $form_fields["cost_order_free_{$currency}"] = array(
-                'title'       => esc_html__("Od jaké ceny bude doprava zadarmo (v $currency)", 'ppl-cz' ),
+                'title'       => sprintf(esc_html__("Od jaké ceny bude doprava zadarmo (v %s)", 'ppl-cz' ), $currency_safe),
                 'type'        => 'price',
                 'description' => esc_html__('Od jaké ceny bude doprava zadarmo, pokud není vyplněno, nebude zadarmo', 'ppl-cz'  ),
                 'default'     => '',
@@ -260,7 +233,7 @@ class ShipmentMethod extends \WC_Shipping_Method {
 
             if (in_array($currency, ['CZK', "EUR", "PLN", "HUF", "RON"])) {
 
-                $text_safe = esc_html__("Příplatek za dobírku", 'ppl-cz' ) . " <span class='shipment-price-original'>(v {$currency})</span>" /*<!--<span class='shipment-price-base'>(v {$basecurrency})</span>-->*/;
+                $text_safe = esc_html__("Příplatek za dobírku", 'ppl-cz' ) . " <span class='shipment-price-original'>" . $currency_safe ."</span>" /*<!--<span class='shipment-price-base'>(v {$basecurrency})</span>-->*/;
 
                 $form_fields["cost_cod_fee_{$currency}"] = array(
                     'title' => $text_safe,
@@ -278,8 +251,10 @@ class ShipmentMethod extends \WC_Shipping_Method {
                     'desc_tip' => true
                 );
 
+
+
                 $form_fields["cost_order_free_cod_{$currency}"] = array(
-                    'title' => esc_html__("Od jaké ceny bude doprava zadarmo pro dobírku (v $currency)", 'ppl-cz'),
+                    'title' => sprintf(esc_html__("Od jaké ceny bude doprava zadarmo pro dobírku (v %s)", 'ppl-cz'), $currency_safe),
                     'type' => 'price',
                     'description' => esc_html__('Od jaké ceny bude doprava zadarmo pro dobírku, v případě nevyplnění nebude zadarmo', 'ppl-cz'),
                     'default' => '',

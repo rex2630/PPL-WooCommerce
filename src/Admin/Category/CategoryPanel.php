@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile WordPress.Security.EscapeOutput.OutputNotEscaped
 
 namespace PPLCZ\Admin\Category;
 
@@ -93,7 +92,7 @@ window.PPLczPlugin.push(['pplczInitCategoryTab', 'pplcz_tab']);
             <th>
                 Seznam zakázaných metod pro PPL
             </th>
-                <?php echo self::renderForm($categoryModel, true); ?>
+                <?php self::renderForm($categoryModel, true); ?>
             </tr>
             <?php
             }

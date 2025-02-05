@@ -27,32 +27,19 @@ use PPLCZCPL\Model\EpsApiMyApi2WebModelsOrderBatchOrderModel;
 use PPLCZCPL\Model\EpsApiMyApi2WebModelsOrderBatchOrderModelSender;
 use PPLCZCPL\Model\EpsApiMyApi2WebModelsOrderEventCancelOrderEventModel;
 use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchCreateShipmentBatchModel;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchCreateShipmentBatchModelLabelSettings;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchExternalNumberModel;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchLabelSettingsModelCompleteLabelSettings;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchRecipientAddressModel;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchShipmentModel;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchShipmentModelCashOnDelivery;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchShipmentModelInsurance;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchShipmentModelSender;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchShipmentModelShipmentSet;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchShipmentModelSpecificDelivery;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchShipmentSetItemModel;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentBatchShipmentSetItemModelWeighedShipmentInfo;
 use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentShipmentModel;
-use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentShipmentStates;
 use PPLCZCPL\Model\EpsApiMyApi2WebModelsShipmentTrackAndTraceItemModel;
-use PPLCZCPL\ObjectSerializer;
 use PPLCZVendor\Psr\Http\Message\RequestInterface;
 use PPLCZ\Data\AddressData;
-use PPLCZ\Data\CodBankAccountData;
 use PPLCZ\Data\CollectionData;
 use PPLCZ\Data\PackageData;
-use PPLCZ\Data\ParcelData;
 use PPLCZ\Data\ShipmentData;
 use PPLCZ\Model\Model\LabelPrintModel;
 use PPLCZ\Model\Model\WhisperAddressModel;
 use PPLCZ\Serializer;
+
+require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 
 
 class CPLOperation
@@ -147,28 +134,24 @@ class CPLOperation
             $content["client_secret"] =  get_option(pplcz_create_name("client_secret")) ?: get_option(pplcz_create_name("secret"));
         }
 
-        $opts = array('http' =>
-            array(
-                'ignore_errors' => true,
-                'timeout' => 5,
-                'method' => 'POST',
-                'header' => join("\r\n", $headers),
-                'content' => http_build_query($content),
-            ));
+        $url = self::ACCESS_TOKEN_URL ;
 
-        $context = stream_context_create($opts);
-        $url = self::ACCESS_TOKEN_URL;
-        $content = @file_get_contents("{$url}", false, $context); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-        $httpResponse = @$http_response_header;
-        if ($httpResponse && strpos($http_response_header[0], "200 OK")) {
+        $response = wp_remote_post($url, [
+            "method" => "POST",
+            "headers" => $headers,
+            "body" =>  http_build_query($content),
+        ]);
+
+        if ($response && isset($response['http_response']) && $response['http_response']->get_status() === 200) {
             if ($content) {
-                $tokens = json_decode($content, true);
+                $tokens = json_decode($response['body'], true);
                 add_option(pplcz_create_name("access_token"), $tokens["access_token"]) || update_option(pplcz_create_name("access_token"), $tokens["access_token"]);
                 return $tokens["access_token"];
             }
         } else {
+
             $errorMaker = "Url: {$url}\n";
-            $errorMaker .= join("\n", is_array($httpResponse) ? @$httpResponse : []);
+            $errorMaker .= $response['body'];
             if ($content)
                 $errorMaker .= "\n" . $content;
             else
@@ -390,8 +373,11 @@ class CPLOperation
              */
             $file = $httpData[0];
             $path = $file->getPathname();
-            $content = file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
+            $filesystem = new \WP_Filesystem_Direct( true );
+            $content = $filesystem->get_contents($path);
+
+            // pdf file
             exit($content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
         else {
@@ -455,9 +441,11 @@ class CPLOperation
              */
             $file = $httpData[0];
             $path = $file->getPathname();
-            $content = file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
+            $filesystem = new \WP_Filesystem_Direct( true );
+            $content = $filesystem->get_contents($path);
 
+            // pdf file
             exit($content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
     }
@@ -487,8 +475,10 @@ class CPLOperation
          */
         $file = $httpData[0];
         $path = $file->getPathname();
-        $content = file_get_contents($path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+        $filesystem = new \WP_Filesystem_Direct( true );
+        $content = $filesystem->get_contents($path);
 
+        // pdf file
         exit($content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 

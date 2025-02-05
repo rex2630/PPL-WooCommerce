@@ -346,6 +346,48 @@
 // phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 // phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 // phpcs:ignoreFile WordPress.Security.EscapeOutput.ExceptionNotEscaped            
+ 
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+// phpcs:ignoreFile WordPress.Security.EscapeOutput.ExceptionNotEscaped            
+ 
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+// phpcs:ignoreFile WordPress.Security.EscapeOutput.ExceptionNotEscaped            
+ 
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+// phpcs:ignoreFile WordPress.Security.EscapeOutput.ExceptionNotEscaped            
+ 
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+// phpcs:ignoreFile WordPress.Security.EscapeOutput.ExceptionNotEscaped            
+ 
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+// phpcs:ignoreFile WordPress.Security.EscapeOutput.ExceptionNotEscaped            
+ 
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+// phpcs:ignoreFile WordPress.Security.EscapeOutput.ExceptionNotEscaped            
+ 
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+// phpcs:ignoreFile WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+// phpcs:ignoreFile WordPress.Security.EscapeOutput.ExceptionNotEscaped            
 
 /**
  * VersionInformationApi

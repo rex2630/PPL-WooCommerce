@@ -16,6 +16,10 @@ class BlockOldView
 
     private static $updateOrderReview = false;
 
+    private static $beforeUpdateOrderShipment = null;
+
+    private static $afterUpdateOrderShipment = null;
+
     public static function footer()
     {
         wp_enqueue_script("pplcz_map_js");
@@ -24,22 +28,29 @@ class BlockOldView
         wp_enqueue_script("pplcz_parcelshop-old-view", $script, [], pplcz_get_version(), true);
     }
 
+    public static function woocommerce_checkout_update_order_review($postdata)
+    {
+        self::$beforeUpdateOrderShipment = pplcz_get_cart_shipping_method();
 
-    public static function woocommerce_checkout_update_order_review($postdata) {
+        wp_parse_str($postdata, $content);
+
+        if (self::$beforeUpdateOrderShipment) {
+            self::$beforeUpdateOrderShipment = self::$beforeUpdateOrderShipment->get_method_id();
+            if (isset($content['shipping_method']) && is_array($content['shipping_method']))
+                self::$afterUpdateOrderShipment = reset($content['shipping_method']);
+        }
+    }
+
+
+    public static function woocommerce_after_calculate_totals($postdata) {
 
         $shippingMethod = pplcz_get_cart_shipping_method();
         if ($shippingMethod) {
-            $method = $shippingMethod->get_method_id();
-
-            // phpcs:ignore
-            $methods = isset( $_POST['shipping_method'] ) ? wc_clean( wp_unslash( sanitize_post($_POST['shipping_method'], 'raw' )) ) : [];
-            foreach ($methods as $val) {
-                if ($val === $method)
-                    return;
-            }
+            if ($shippingMethod->get_method_id() === self::$beforeUpdateOrderShipment
+                || !self::$afterUpdateOrderShipment)
+                return;
             self::$updateOrderReview = true;
         }
-
     }
 
     public static function after_shipping($inner = false)
@@ -58,6 +69,7 @@ class BlockOldView
          */
         $cartModel = Serializer::getInstance()->denormalize($shippingMethod->get_meta_data(), CartModel::class);
 
+        printf("<input type='hidden' value='%s' name='pplcz_nonce' >",  esc_html(wp_create_nonce("selectparcelshop")));
         if ($cartModel->getParcelRequired() && !is_cart()) {
             $parcelshop = pplcz_get_cart_parceldata();
 
@@ -188,7 +200,9 @@ class BlockOldView
         add_filter("woocommerce_cart_shipping_method_full_label", [self::class, "full_label"], 10, 2);
         add_action("wp_head", [self::class, "label_position"]);
         add_action("wp_footer", [self::class, "footer"]);
+
         add_action("woocommerce_checkout_update_order_review", [self::class, "woocommerce_checkout_update_order_review"]);
+        add_action("woocommerce_after_calculate_totals", [self::class, "woocommerce_after_calculate_totals"]);
 
     }
 }
