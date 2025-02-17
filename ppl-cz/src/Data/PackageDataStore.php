@@ -62,7 +62,6 @@ class PackageDataStore extends PPLDataStore
 
         $phases_safe = join(',',array_map(function ($phase) use ($wpdb) {
             return "%s";
-
         }, $phases));
 
 

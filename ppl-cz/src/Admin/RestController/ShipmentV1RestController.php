@@ -126,8 +126,8 @@ class ShipmentV1RestController extends PPLRestController
     public function get_shipment(\WP_REST_Request $request)
     {
         $shipmentData = new ShipmentData($request->get_param("id"));
-        $shipmentModel = Serializer::getInstance()->denormalize($shipmentData, ShipmentModel::class);
-        $data = Serializer::getInstance()->normalize($shipmentModel, "array");
+        $shipmentModel = pplcz_denormalize($shipmentData, ShipmentModel::class);
+        $data = pplcz_normalize($shipmentModel, "array");
         $response = new \WP_REST_Response();
         $response->set_data($data);
         return $response;
@@ -136,8 +136,8 @@ class ShipmentV1RestController extends PPLRestController
     public function create_shipment(\WP_REST_Request $request)
     {
         $data = $request->get_json_params();
-        $shipmentModel = Serializer::getInstance()->denormalize($data, UpdateShipmentModel::class);
-        $shipment = Serializer::getInstance()->denormalize($shipmentModel, ShipmentData::class);
+        $shipmentModel = pplcz_denormalize($data, UpdateShipmentModel::class);
+        $shipment = pplcz_denormalize($shipmentModel, ShipmentData::class);
         $shipment->save();
 
         $resp = new \WP_REST_Response();
@@ -168,12 +168,11 @@ class ShipmentV1RestController extends PPLRestController
     public function update_recipient_address(\WP_REST_Request $request)
     {
         $data = $request->get_json_params();
-        $sender = Serializer::getInstance()->denormalize($data, RecipientAddressModel::class);
+        $sender = pplcz_denormalize($data, RecipientAddressModel::class);
 
 
-        $validator = Validator::getInstance();
         $errors = new Errors();
-        $validator->validate($sender, $errors, "");
+        pplcz_validate($sender, $errors, "");
         if ($errors->errors)
             return new RestResponse400($errors);
 
@@ -181,7 +180,7 @@ class ShipmentV1RestController extends PPLRestController
         $shipment = $this->getShipment($request->get_param("id"));
         if ($shipment instanceof \WP_REST_Response)
             return $shipment;
-        $shipment = Serializer::getInstance()->denormalize($sender, ShipmentData::class, null, ["data" => $shipment]);
+        $shipment = pplcz_denormalize($sender, ShipmentData::class, null, ["data" => $shipment]);
         $shipment->set_import_errors(null);
         $shipment->save();
         $resp = new \WP_REST_Response();
@@ -195,7 +194,7 @@ class ShipmentV1RestController extends PPLRestController
         /**
          * @var UpdateShipmentBankAccountModel $sender
          */
-        $sender = Serializer::getInstance()->denormalize($data, UpdateShipmentBankAccountModel::class);
+        $sender = pplcz_denormalize($data, UpdateShipmentBankAccountModel::class);
         $shipment = $this->getShipment($request->get_param("id"));
 
         if ($shipment instanceof \WP_REST_Response)
@@ -211,7 +210,7 @@ class ShipmentV1RestController extends PPLRestController
     public function update_shipment_parcel(\WP_REST_Request $request)
     {
         $data = $request->get_json_params();
-        $sender = Serializer::getInstance()->denormalize($data, UpdateShipmentParcelModel::class);
+        $sender = pplcz_denormalize($data, UpdateShipmentParcelModel::class);
         $shipment = $this->getShipment($request->get_param("id"));
 
         $founded = ParcelData::getAccessPointByCode($sender->getParcelCode());
@@ -229,7 +228,7 @@ class ShipmentV1RestController extends PPLRestController
         if ($shipment instanceof \WP_REST_Response)
             return $shipment;
         if (isset($esp))
-            $parcel = Serializer::getInstance()->denormalize($esp, ParcelData::class, null, ["data" => $founded]);
+            $parcel = pplcz_denormalize($esp, ParcelData::class, null, ["data" => $founded]);
         else
             $parcel = $founded;
         $parcel->save();
@@ -248,7 +247,7 @@ class ShipmentV1RestController extends PPLRestController
         /**
          * @var UpdateShipmentSenderModel $sender
          */
-        $sender = Serializer::getInstance()->denormalize($data, UpdateShipmentSenderModel::class);
+        $sender = pplcz_denormalize($data, UpdateShipmentSenderModel::class);
         $shipment = $this->getShipment($request->get_param("id"));
         if ($shipment instanceof \WP_REST_Response)
             return $shipment;
@@ -263,7 +262,7 @@ class ShipmentV1RestController extends PPLRestController
     {
         $data = $request->get_json_params();
 
-        $shipmentModel = Serializer::getInstance()->denormalize($data, UpdateShipmentModel::class);
+        $shipmentModel = pplcz_denormalize($data, UpdateShipmentModel::class);
 
         $shipment = $this->getShipment($request->get_param("id"));
 
@@ -271,13 +270,13 @@ class ShipmentV1RestController extends PPLRestController
             return $shipment;
 
         $err = new Errors();
-        Validator::getInstance()->validate($shipmentModel, $err, "");
+        pplcz_validate($shipmentModel, $err, "");
 
         if ($err->errors)
             return new RestResponse400($err);
 
 
-        $shipment = Serializer::getInstance()->denormalize($shipmentModel, ShipmentData::class, null, ["data" => $shipment]);
+        $shipment = pplcz_denormalize($shipmentModel, ShipmentData::class, null, ["data" => $shipment]);
         $shipment->set_import_errors(null);
         $shipment->save();
 

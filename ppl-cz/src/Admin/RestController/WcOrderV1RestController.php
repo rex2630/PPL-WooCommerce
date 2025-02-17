@@ -34,8 +34,8 @@ class WcOrderV1RestController extends PPLRestController
     {
         $shipments = ShipmentData::find_shipments_by_wc_order($request->get_param("id"));
         foreach ($shipments as $key =>$value) {
-            $value = Serializer::getInstance()->denormalize($value, ShipmentModel::class);
-            $value = Serializer::getInstance()->normalize($value, 'array');
+            $value = pplcz_denormalize($value, ShipmentModel::class);
+            $value = pplcz_normalize($value, 'array');
             $shipments[$key] = $value;
         }
         $response = new \WP_REST_Response();

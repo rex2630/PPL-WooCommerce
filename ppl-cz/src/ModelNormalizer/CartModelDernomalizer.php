@@ -28,6 +28,11 @@ class CartModelDernomalizer implements DenormalizerInterface
         if (!WC()->cart)
             WC()->initialize_cart();
 
+        $cart = WC()->cart;
+        $session = WC()->session;
+
+
+        $country = $cart->get_customer()->get_shipping_country('');
 
         $paymentMethod = WC()->session->get('chosen_payment_method');
 
@@ -39,21 +44,35 @@ class CartModelDernomalizer implements DenormalizerInterface
 
         $shipmentCartModel->setParcelRequired(false);
         $shipmentCartModel->setMapEnabled(false);
-        if (@$data->parcelBoxRequired) {
-            $shipmentCartModel->setParcelRequired(true);
-            $shipmentCartModel->setMapEnabled(true);
-        }
-
+        $shipmentCartModel->setDisabledByCountry(false);
         $shipmentCartModel->setAgeRequired(false);
 
         $serviceCode = str_replace(pplcz_create_name(''), '', $data->id);
+        // preklad
+        $serviceCode = ShipmentMethod::methodsFor($country, $serviceCode);
 
         if (CartValidator::ageRequired(WC()->cart, $serviceCode)) {
             $shipmentCartModel->setAgeRequired(true);
         }
 
+        if (!isset($countries[$country]))
+        {
+            $shipmentCartModel->setDisabledByCountry(true);
+        }
 
-        $codName = ShipmentMethod::codMethods()[$serviceCode];
+
+        if (@$data->parcelBoxRequired) {
+            $shipmentCartModel->setParcelRequired(true);
+            $shipmentCartModel->setMapEnabled(true);
+            if (!in_array($country, ["CZ", "SK", "DE", "PL"], true))
+            {
+                $shipmentCartModel->setDisabledByCountry(true);
+            }
+        }
+
+        $shipmentCartModel->setServiceCode($serviceCode);
+
+        $codServiceCode = ShipmentMethod::codMethods()[$serviceCode];
 
         if (@$data->get_instance_option("codPayment")) {
             $shipmentCartModel->setCodPayment(@$data->get_instance_option("codPayment"));
@@ -61,15 +80,12 @@ class CartModelDernomalizer implements DenormalizerInterface
             $shipmentCartModel->setCodPayment("");
         }
 
-
         $disabledPayments = @$data->get_instance_option("disablePayments");
 
         if (!is_array($disabledPayments))
             $disabledPayments = [];
 
         $shipmentCartModel->setDisablePayments($disabledPayments);
-
-        $country = WC()->cart->get_customer()->get_shipping_country('');
 
         $countryAndBankAccount = pplcz_get_cod_currencies();
 
@@ -82,15 +98,14 @@ class CartModelDernomalizer implements DenormalizerInterface
         else
             $shipmentCartModel->setDisableCod(false);
 
-        $maxCodPrice = array_values(array_filter($limits['COD'], function ($item) use ($codName, $currency) {
-            if ($item['product'] === $codName && $item['currency'] === $currency) {
+        $maxCodPrice = array_values(array_filter($limits['COD'], function ($item) use ($codServiceCode, $currency) {
+            if ($item['product'] === $codServiceCode && $item['currency'] === $currency) {
                 return true;
             }
             return false;
         }, true));
 
 
-        $cart = WC()->cart;
 
         $totalContents = $cart->get_cart_contents_total() + $cart->get_cart_contents_tax();
 
@@ -159,7 +174,7 @@ class CartModelDernomalizer implements DenormalizerInterface
              */
             $productModel = Serializer::getInstance()->denormalize($product, ProductModel::class);
 
-            if (in_array($codName, $productModel->getPplDisabledTransport() ?? [], true)) {
+            if (in_array($codServiceCode, $productModel->getPplDisabledTransport() ?? [], true)) {
                 $shipmentCartModel->setDisableCod(true);
             }
 
@@ -186,7 +201,7 @@ class CartModelDernomalizer implements DenormalizerInterface
                 $term = get_term($priceWithDph);
                 $categoryModel = Serializer::getInstance()->denormalize($term, CategoryModel::class);
 
-                if (in_array($codName, $categoryModel->getPplDisabledTransport() ?? [], true)) {
+                if (in_array($codServiceCode, $categoryModel->getPplDisabledTransport() ?? [], true)) {
                     $shipmentCartModel->setDisableCod(true);
                 }
                 if (in_array($serviceCode, $categoryModel->getPplDisabledTransport() ?? [], true)) {
@@ -194,7 +209,16 @@ class CartModelDernomalizer implements DenormalizerInterface
                     break 2;
                 }
             }
-
+        }
+        // kupony
+        $coupons = WC()->cart->get_applied_coupons();
+        foreach ($coupons as $coupon)
+        {
+            $coupon = new \WC_Coupon($coupon);
+            if ($coupon->get_id() && $coupon->get_free_shipping())
+            {
+                $shipmentCartModel->setCost(0);
+            }
         }
 
         return $shipmentCartModel;

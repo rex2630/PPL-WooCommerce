@@ -46,12 +46,25 @@ class OrderFilter {
         ]);
     }
 
+    public static function woocommerce_query_vars($query_vars)
+    {
+        $query_vars['pplcz_batch'] = sanitize_text_field(wp_unslash(isset($_REQUEST['pplcz_batch']) ? $_REQUEST['pplcz_batch'] : '' ));
+        return $query_vars;
+    }
+
+    public static function query_vars($query_vars)
+    {
+        $query_vars[] = 'pplcz_batch';
+        return $query_vars;
+    }
+
     public static function query_old_clausule($sql, $item)
     {
         if (!is_admin())
             return $sql;
         if ($item instanceof \WP_Query && @$item->query['post_type'] === "shop_order")
         {
+            global $wpdb;
             $s = @$item->query['s'];
             $all = true;
             if (isset($item->query['search_filter']) && $item->query['search_filter'] === 'all')
@@ -60,8 +73,13 @@ class OrderFilter {
             }
 
             if ($s && $all) {
-                global $wpdb;
                 $q = str_replace("likeMaker", "%", $wpdb->prepare(" OR {$wpdb->prefix}posts.id in (select pplczfilter_a.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_a join {$wpdb->prefix}pplcz_package pplczfilter_b on pplczfilter_b.ppl_shipment_id = pplczfilter_a.ppl_shipment_id where pplczfilter_b.shipment_number like %s )", $s . "likeMaker"));
+                $sql["where"] .= $q;
+            }
+            $s = @$item->query['pplcz_batch'];
+            if ($s)
+            {
+                $q = $wpdb->prepare(" AND {$wpdb->prefix}posts.id in (select pplczfilter_a.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_a where pplczfilter_a.batch_label_group = %s )", $s);
                 $sql["where"] .= $q;
             }
         }
@@ -72,8 +90,13 @@ class OrderFilter {
     {
         global $wpdb;
 
-        if (isset($args["s"]) && $args['s'] && $args["search_filter"] === 'all') {
-            $q =str_replace("likeMaker", "%", $wpdb->prepare(" OR {$wpdb->prefix}wc_orders.id in (select pplczfilter_a.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_a join {$wpdb->prefix}pplcz_package pplczfilter_b on pplczfilter_b.ppl_shipment_id = pplczfilter_a.ppl_shipment_id where pplczfilter_b.shipment_number like %s )", $args['s'] . "likeMaker"));
+        if (isset($args["s"]) && $args['s'] && isset($args['search_filter']) && $args["search_filter"] === 'all') {
+            $q = str_replace("likeMaker", "%", $wpdb->prepare(" {$wpdb->prefix}wc_orders.id in (select pplczfilter_a.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_a join {$wpdb->prefix}pplcz_package pplczfilter_b on pplczfilter_b.ppl_shipment_id = pplczfilter_a.ppl_shipment_id where pplczfilter_b.shipment_number like %s )", $args['s'] . "likeMaker"));
+            $sql["where"] = preg_replace("~ OR ~", " OR ($q) OR ", $sql['where'] , 1);
+        }
+        if (isset($args["pplcz_batch"]) && $args['pplcz_batch'])
+        {
+            $q = $wpdb->prepare(" AND {$wpdb->prefix}wc_orders.id in (select pplczfilter_a.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_a where pplczfilter_a.batch_label_group = %s )", $args["pplcz_batch"]);
             $sql["where"] .= $q;
         }
 
@@ -99,82 +122,6 @@ class OrderFilter {
 
         $bulk["pplcz_bulk_operation_create_labels"] = "Vytisknout zásilky PPL";
         return $bulk;
-    }
-
-    public static function handle_bulk_action($ids, $action, $type)
-    {
-        if (str_contains($action, "pplcz_bulk_operation_create_labels") && $type === 'order')
-        {
-            $shipments = array_reduce(array_map(function ($id) {
-                $order = new \WC_Order($id);
-                $shipments = ShipmentData::read_order_shipments($id);
-                $founded = !!$shipments;
-                /**
-                 * @var ShipmentData $shipment
-                 */
-                foreach ($shipments as $key => $shipment) {
-                    if ($shipment->get_lock() || $shipment->get_batch_id()) {
-                        unset($shipments[$key]);
-                    }
-                }
-
-                if ($shipments)
-                {
-                    foreach ($shipments as $k => $v)
-                    {
-                        $shipments[$k] = Serializer::getInstance()->denormalize($v, ShipmentModel::class);
-                    }
-                    return $shipments;
-                }
-                if (!$founded && self::hasPPLShipment($order)) {
-                    return [Serializer::getInstance()->denormalize($order, ShipmentModel::class)];
-                }
-                return [];
-
-            }, $ids), function ($carry, $shipment) {
-                return array_merge($carry, $shipment);
-            }, []);
-
-            $hasError = false;
-            foreach ($shipments as $shipment) {
-                $errors  = new Errors();
-                Validator::getInstance()->validate($shipment, $errors, "");
-                if ($errors->errors) {
-                    $hasError = true;
-                    set_transient(pplcz_create_name("bulk_create_label_" . get_current_user_id()), esc_html__('Při vytváření zásilek byly nalezeny chyby', "ppl-cz"), 60);
-                }
-
-            }
-            if (!$hasError) {
-                /**
-                 * @var ShipmentModel $shipment
-                 * @var ShipmentData $shipmentData
-                 */
-                foreach ($shipments as $key => $shipment) {
-                    if (!$shipment->getId()) {
-                        $shipmentData = Serializer::getInstance()->denormalize($shipment, ShipmentData::class);
-                        $shipmentData->save();
-                        $shipments[$key] = $shipmentData->get_id();
-                    } else {
-                        $shipments[$key] = $shipment->getId();
-                    }
-
-                }
-
-                $operation = new CPLOperation();
-                try {
-                    $operation->createPackages($shipments);
-                }
-                catch (\Exception $ex) {
-                    set_transient(pplcz_create_name("bulk_create_label_" . get_current_user_id()), esc_html__("Vznikl problém při vytváření zásilky", "ppl-cz"), 60);
-                }
-            }
-
-
-            return $ids;
-        }
-
-        return $ids;
     }
 
     public static function admin_notices() {
@@ -221,6 +168,9 @@ class OrderFilter {
         add_filter( 'woocommerce_orders_table_query_clauses', [self::class, 'query_clausule'], 10, 3);
 
         add_action("wp_ajax_ppl_filter_table", [self::class, "rerender"]);
+
+        add_filter('woocommerce_order_query_args', [self::class, 'woocommerce_query_vars']);
+        add_filter('query_vars', [self::class, 'query_vars']);
     }
 
 }

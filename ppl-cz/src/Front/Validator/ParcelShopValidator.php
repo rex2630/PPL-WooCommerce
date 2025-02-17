@@ -46,7 +46,7 @@ class ParcelShopValidator
 
     public static function cart_validate($data, ?\WP_Error $errors = null)
     {
-        Validator::getInstance()->validate(WC()->cart, $errors);
+        pplcz_validate(WC()->cart, $errors);
 
         return $data;
     }

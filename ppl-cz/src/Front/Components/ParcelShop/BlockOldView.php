@@ -106,9 +106,10 @@ class BlockOldView
             $parcelRequired = $metadata->getParcelRequired();
             ob_start();
 
+            // label is content from woocommerce with html, where i dont want change
             wc_get_template("ppl/method-name.php", [
                 "img" => $img,
-                "label_safe" => $label
+                "pplcz_label_safe" => $label
             ]);
             return ob_get_clean();
 

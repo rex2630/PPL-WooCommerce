@@ -24,8 +24,8 @@ if (!class_exists('CustomQueryResolver', false) && !interface_exists('CustomQuer
 if (!class_exists('BaseEndpoint', false) && !interface_exists('BaseEndpoint', false) && !trait_exists('BaseEndpoint', false)) {
     spl_autoload_call('PPLCZVendor\BaseEndpoint');
 }
-if (!class_exists('ComposerAutoloaderInite48310d9b40bbf9f494774568935639c', false) && !interface_exists('ComposerAutoloaderInite48310d9b40bbf9f494774568935639c', false) && !trait_exists('ComposerAutoloaderInite48310d9b40bbf9f494774568935639c', false)) {
-    spl_autoload_call('PPLCZVendor\ComposerAutoloaderInite48310d9b40bbf9f494774568935639c');
+if (!class_exists('ComposerAutoloaderInitb286982f37f0f363c42b4b8dcc4bbf6a', false) && !interface_exists('ComposerAutoloaderInitb286982f37f0f363c42b4b8dcc4bbf6a', false) && !trait_exists('ComposerAutoloaderInitb286982f37f0f363c42b4b8dcc4bbf6a', false)) {
+    spl_autoload_call('PPLCZVendor\ComposerAutoloaderInitb286982f37f0f363c42b4b8dcc4bbf6a');
 }
 if (!class_exists('Salute', false) && !interface_exists('Salute', false) && !trait_exists('Salute', false)) {
     spl_autoload_call('PPLCZVendor\Salute');

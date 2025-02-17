@@ -67,7 +67,7 @@ class OrderPanel {
 
         foreach ($shipments as $key => $shipment) {
             $tests = new Errors();
-            Validator::getInstance()->validate($shipment, $tests, "");
+            pplcz_validate($shipment, $tests, "");
             if ($tests->errors)
             {
                 $jsShipmentsOk[$key] = false;
@@ -95,12 +95,9 @@ class OrderPanel {
         ]);
 
 
-        $id_safe = $order->get_id();
-        JsTemplate::add_inline_script("
-window.PPLczPlugin.push([ 'pplczInitOrderPanel', 'pplcz-order-panel-shipment-div-{$id_safe}-overlay']);
-");
+        $pplcz_id_safe = (int) $order->get_id();
 
-
+        JsTemplate::add_inline_script("pplczInitOrderPanel", "pplcz-order-panel-shipment-div-{$pplcz_id_safe}-overlay");
     }
 
     public static function prepare_package()
@@ -355,7 +352,7 @@ window.PPLczPlugin.push([ 'pplczInitOrderPanel', 'pplcz-order-panel-shipment-div
             $wc = new \WC_Order($orderId);
             $newShipment = Serializer::getInstance()->denormalize($wc, ShipmentModel::class);
             $errors = new Errors();
-            Validator::getInstance()->validate($newShipment, $errors, "");
+            pplcz_validate($newShipment, $errors, "");
             if (!$errors->errors) {
                 $newShipment = Serializer::getInstance()->denormalize($newShipment, ShipmentData::class);
                 $newShipment->save();
@@ -367,7 +364,7 @@ window.PPLczPlugin.push([ 'pplczInitOrderPanel', 'pplcz-order-panel-shipment-div
             $newShipment = new ShipmentData($shipmentId);
             $testShipment = Serializer::getInstance()->denormalize($newShipment, ShipmentModel::class);
             $errors = new Errors();
-            Validator::getInstance()->validate($testShipment, $errors, "");
+            pplcz_validate($testShipment, $errors, "");
             if ($errors->errors)
             {
                 wp_send_json_error("Problém s vytvořením zásilky");

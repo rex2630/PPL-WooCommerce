@@ -87,12 +87,6 @@ class ShipmentModel extends \ArrayObject
     /**
      * 
      *
-     * @var BankAccountModel
-     */
-    protected $codBankAccount;
-    /**
-     * 
-     *
      * @var bool|null
      */
     protected $hasParcel;
@@ -406,28 +400,6 @@ class ShipmentModel extends \ArrayObject
     {
         $this->initialized['batchLabelGroup'] = true;
         $this->batchLabelGroup = $batchLabelGroup;
-        return $this;
-    }
-    /**
-     * 
-     *
-     * @return BankAccountModel
-     */
-    public function getCodBankAccount() : ?BankAccountModel
-    {
-        return $this->codBankAccount;
-    }
-    /**
-     * 
-     *
-     * @param BankAccountModel $codBankAccount
-     *
-     * @return self
-     */
-    public function setCodBankAccount(?BankAccountModel $codBankAccount) : self
-    {
-        $this->initialized['codBankAccount'] = true;
-        $this->codBankAccount = $codBankAccount;
         return $this;
     }
     /**

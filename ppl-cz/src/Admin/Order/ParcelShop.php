@@ -18,7 +18,7 @@ class ParcelShop {
         if ($item instanceof \WC_Order_Item_Shipping)
         {
             $meta = self::getParcelDataModel($item);
-            $meta_id_safe = (int)$item_id;
+            $pplcz_meta_id_safe = (int)$item_id;
             wc_get_template("ppl/admin/parcelshop-shipping-address.php", [
                 "shippingAddress" => self::getParcelDataModel($item),
                 "meta_id" => $item_id,
@@ -28,9 +28,7 @@ class ParcelShop {
                 "show" => str_contains($item->get_method_id(), pplcz_create_name(""))
             ]);
 
-            JsTemplate::add_inline_script("
-window.PPLczPlugin.push(['pplczPPLParcelshop', 'pplcz_parcelshop_$meta_id_safe']);
-");
+            JsTemplate::add_inline_script("pplczPPLParcelshop", "pplcz_parcelshop_$pplcz_meta_id_safe");
         }
 
         return;

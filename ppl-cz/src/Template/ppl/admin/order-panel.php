@@ -4,10 +4,10 @@
 use PPLCZ\Model\Model\LabelPrintModel;
 
 defined("WPINC") or die();
-$orderId_safe = (int)$order->get_id();
+$pplcz_orderId_safe = (int)$order->get_id();
 ?>
-<div id="pplcz-order-panel-shipment-div-<?php echo $orderId_safe ?>-overlay"
-     data-orderId='<?php echo $orderId_safe ?>'
+<div id="pplcz-order-panel-shipment-div-<?php echo $pplcz_orderId_safe ?>-overlay"
+     data-orderId='<?php echo $pplcz_orderId_safe ?>'
      data-nonce='<?php echo esc_html($nonce) ?>'
 >
 <?php

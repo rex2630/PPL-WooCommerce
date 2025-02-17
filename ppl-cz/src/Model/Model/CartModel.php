@@ -33,6 +33,12 @@ class CartModel extends \ArrayObject
     /**
      * 
      *
+     * @var bool
+     */
+    protected $disabledByCountry;
+    /**
+     * 
+     *
      * @var bool|null
      */
     protected $ageRequired;
@@ -42,6 +48,12 @@ class CartModel extends \ArrayObject
      * @var string|null
      */
     protected $codPayment;
+    /**
+     * 
+     *
+     * @var string
+     */
+    protected $serviceCode;
     /**
      * 
      *
@@ -141,6 +153,28 @@ class CartModel extends \ArrayObject
     /**
      * 
      *
+     * @return bool
+     */
+    public function getDisabledByCountry() : ?bool
+    {
+        return $this->disabledByCountry;
+    }
+    /**
+     * 
+     *
+     * @param bool $disabledByCountry
+     *
+     * @return self
+     */
+    public function setDisabledByCountry(bool $disabledByCountry) : self
+    {
+        $this->initialized['disabledByCountry'] = true;
+        $this->disabledByCountry = $disabledByCountry;
+        return $this;
+    }
+    /**
+     * 
+     *
      * @return bool|null
      */
     public function getAgeRequired() : ?bool
@@ -180,6 +214,28 @@ class CartModel extends \ArrayObject
     {
         $this->initialized['codPayment'] = true;
         $this->codPayment = $codPayment;
+        return $this;
+    }
+    /**
+     * 
+     *
+     * @return string
+     */
+    public function getServiceCode() : ?string
+    {
+        return $this->serviceCode;
+    }
+    /**
+     * 
+     *
+     * @param string $serviceCode
+     *
+     * @return self
+     */
+    public function setServiceCode(string $serviceCode) : self
+    {
+        $this->initialized['serviceCode'] = true;
+        $this->serviceCode = $serviceCode;
         return $this;
     }
     /**

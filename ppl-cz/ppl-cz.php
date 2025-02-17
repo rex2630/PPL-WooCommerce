@@ -6,7 +6,7 @@ Plugin URI: https://www.ppl.cz/jak-zacit#plugin
 Author URI: https://www.ppl.cz
 Description: Jednoduché vytváření zásilek pro PPL CZ s.r.o. Integrace do košíku, editace adres objednávek, stavy zásilek (zjednodušené, kompletní) a jejich sledování. Základem pluginu je tisk etiket. Pro aktivaci pluginu, kontaktujte ithelp@ppl. Určeno pro WooCommerce verze 8.0 a vyšší.
 Author: PPL
-Version: 1.0.9
+Version: 1.0.11
 Requires Plugins: woocommerce
 License: GPLv2 or later
 Requires PHP: 7.3
@@ -74,6 +74,7 @@ function pplcz_init()
 
 add_action("before_woocommerce_init", "pplcz_init");
 add_action("woocommerce_init", "pplcz_tables");
+add_action("woocommerce_cart_shipping_packages", "pplcz_currency");
 
 register_activation_hook(__FILE__, "pplcz_activate");
 register_deactivation_hook(__FILE__, "pplcz_deactivate");

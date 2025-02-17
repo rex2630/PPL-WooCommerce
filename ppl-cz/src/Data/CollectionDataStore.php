@@ -193,12 +193,14 @@ class CollectionDataStore extends \WC_Data_Store_WP implements CollectionDataSto
     public function last_collection()
     {
         global $wpdb;
+        $result = null;
 
         foreach ($wpdb->get_results($wpdb->prepare("select * from {$wpdb->prefix}pplcz_collections order by created_date desc limit 1"), ARRAY_A) as $result)
         {
             wp_cache_add($result["ppl_collection_id"], $result, "pplcz_collection");
 
         }
+
         if ($result)
             return new CollectionData($result["ppl_collection_id"]);
         return null;

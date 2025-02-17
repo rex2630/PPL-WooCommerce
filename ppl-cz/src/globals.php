@@ -49,6 +49,13 @@ function pplcz_denormalize($value, $type, $context = [])
     return Serializer::getInstance()->denormalize($value, $type, null, $context);
 }
 
+function pplcz_validate($model, $errors = null,  $path = "") {
+    if (!$errors)
+        $errors = new WP_Error();
+    \PPLCZ\Validator\Validator::getInstance()->validate($model, $errors, $path);
+    return $errors;
+}
+
 function pplcz_get_allowed_countries() {
     $countries_obj = new \WC_Countries();
 
@@ -179,6 +186,16 @@ function pplcz_get_cart_shipping_method()
         }
     }
     return null;
+}
+
+
+function pplcz_currency($params)
+{
+    foreach ($params as $key => $value)
+    {
+        $params[$key]['pplcz_currency'] = get_woocommerce_currency();
+    }
+    return $params;
 }
 
 function pplcz_tables ($activate = false) {

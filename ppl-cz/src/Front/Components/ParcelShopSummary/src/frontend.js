@@ -118,7 +118,7 @@ wp.hooks.addAction('experimental__woocommerce_blocks-checkout-set-active-payment
 	window.wc.blocksCheckout.extensionCartUpdate({
 		namespace: 'pplcz_refresh_payment',
 		data: {
-			payment_method: payment_method.value,
+			payment_method: payment_method.value || payment_method.paymentMethodSlug
 		},
 	});
 });

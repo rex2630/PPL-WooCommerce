@@ -44,9 +44,19 @@ foreach ($shipments as $key => $shipment) {
         {
             $batchLabelGroup = $shipment->getBatchLabelGroup();
         }
+
+        $uri = sanitize_url($_SERVER['REQUEST_URI']);
+        if (strpos($uri, '?') !== false)
+        {
+            $uri .= "&pplcz_batch=" . urlencode($batchLabelGroup);
+        } else {
+            $uri .= "?pplcz_batch=" . urlencode($batchLabelGroup);
+        }
+
+
 ?>
     <?php if ($shipment->getImportState() === "Complete") :?>
-    <?php if ($batchLabelGroup):?>Hromadně <a target="_blank" href="/index.php?pplcz_download=<?php echo urlencode($batchLabelGroup)?>" class="dashicons dashicons-admin-page"></a><br/><?php endif; ?>
+        <?php if ($batchLabelGroup):?><a href="<?php echo esc_html($uri) ?>"  class="pplcz-batch-filter" >Hromadně</a> <a target="_blank" href="/index.php?pplcz_download=<?php echo urlencode($batchLabelGroup)?>" class="dashicons dashicons-admin-page"></a><br/><?php endif; ?>
     <?php foreach ($shipment->getPackages() as $package):?>
         <div style="white-space: nowrap;">
         <?php if ($package->getShipmentNumber()): ?><a href="https://www.ppl.cz/vyhledat-zasilku?shipmentId=<?php echo esc_html($package->getShipmentNumber())?>" target="_blank"><?php echo esc_html($package->getShipmentNumber()) ?><?php endif; ?>&nbsp;

@@ -44,7 +44,8 @@ class ShipmentDataDenormalizer implements DenormalizerInterface
             $shippingMethod = reset($shippingMethods);
             $method = new ShipmentMethod($shippingMethod->get_instance_id() ?: $shippingMethod->get_method_id());
             $code = $method->getMethodCodeByPayment($order->get_payment_method());
-            $title = $method->getMethodTitleByCode($code);
+            $code = ShipmentMethod::methodsFor($order->get_shipping_country(), $code);
+            $title = ShipmentMethod::methodsWithCod()[$code];
             $parcel = self::getParcelDataModel($shippingMethod, true);
             return [$code, $title, ShipmentMethod::isMethodWithCod($code), $parcel];
         }
@@ -90,15 +91,6 @@ class ShipmentDataDenormalizer implements DenormalizerInterface
         if ($data->get_cod_variable_number()) {
             $cod = $data->get_cod_variable_number();
             $shipmentModel->setCodVariableNumber($cod);
-        }
-
-        $id = $data->get_cod_bank_account_id() ?? $data->get_cod_bank_account_id("default");
-
-        if ($id)
-        {
-            $bankAccount = new CodBankAccountData($id);
-            if ($bankAccount->get_id())
-                $shipmentModel->setCodBankAccount(Serializer::getInstance()->denormalize($bankAccount, BankAccountModel::class));
         }
 
         $id = $data->get_sender_address_id() ?? $data->get_sender_address_id("default");

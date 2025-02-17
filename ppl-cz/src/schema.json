@@ -248,18 +248,6 @@
                     }
                 }
             },
-            "UpdateShipmentBankAccountModel": {
-                "type": "object",
-                "required": [
-                    "bankAccountId"
-                ],
-                "properties": {
-                    "bankAccountId": {
-                        "type": "number",
-                        "nullable": true
-                    }
-                }
-            },
             "UpdateShipmentParcelModel": {
                 "type": "object",
                 "required": [
@@ -637,43 +625,6 @@
                     }
                 }
             },
-            "BankAccountModel": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "number",
-                        "nullable": true
-                    },
-                    "accountName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "account": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "accountPrefix": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "bankCode": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "iban": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "swift": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "currency": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                }
-            },
             "CartModel": {
                 "type": "object",
                 "properties": {
@@ -689,6 +640,10 @@
                         "type": "boolean",
                         "nullable": true
                     },
+                    "disabledByCountry": {
+                        "type": "boolean",
+                        "nullable": false
+                    },
                     "ageRequired": {
                         "type": "boolean",
                         "nullable": true
@@ -696,6 +651,10 @@
                     "codPayment": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "serviceCode": {
+                        "type": "string",
+                        "nullable": false
                     },
                     "disablePayments": {
                         "type": "array",
@@ -781,10 +740,6 @@
                     },
                     "batchLabelGroup": {
                         "type": "string",
-                        "nullable": true
-                    },
-                    "codBankAccount": {
-                        "$ref": "#/components/schemas/BankAccountModel",
                         "nullable": true
                     },
                     "hasParcel": {

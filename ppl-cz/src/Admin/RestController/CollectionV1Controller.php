@@ -74,18 +74,6 @@ class CollectionV1Controller extends PPLRestController
                         }
                     ]
                 ]
-            ],
-            [
-                "methods" => "PUT",
-                "callback" => [$this, "update_collection"],
-                "permission_callback" =>[$this, "check_permission"],
-                "args"=> [
-                    "id" => [
-                        "validate_callback" => function($params, $request, $key) {
-                            return is_numeric($params);
-                        }
-                    ]
-                ]
             ]
         ]);
 
@@ -170,7 +158,7 @@ class CollectionV1Controller extends PPLRestController
             return $response;
         }
 
-        $address = Serializer::getInstance()->denormalize($address, CollectionAddressModel::class);
+        $address = pplcz_denormalize($address, CollectionAddressModel::class);
         $response->set_data(Serializer::getInstance()->normalize($address, "array"));
         return $response;
     }
@@ -179,17 +167,17 @@ class CollectionV1Controller extends PPLRestController
     {
         $params = $request->get_json_params();
 
-        $inputCollection = Serializer::getInstance()->denormalize($params, NewCollectionModel::class);
+        $inputCollection = pplcz_denormalize($params, NewCollectionModel::class);
 
         $validator = Validator::getInstance();
         $errors = new Errors();
 
-        $validator->validate($inputCollection, $errors, "");
+        pplcz_validate($inputCollection, $errors, "");
         if ($errors->errors)
             return new RestResponse400($errors);
 
 
-        $collection = Serializer::getInstance()->denormalize($inputCollection, CollectionData::class);
+        $collection = pplcz_denormalize($inputCollection, CollectionData::class);
         $collection->save();
 
         $cpl = new CPLOperation();

@@ -138,10 +138,6 @@ class ShipmentModelNormalizer implements DenormalizerInterface, NormalizerInterf
         elseif (\array_key_exists('batchLabelGroup', $data) && $data['batchLabelGroup'] === null) {
             $object->setBatchLabelGroup(null);
         }
-        if (\array_key_exists('codBankAccount', $data)) {
-            $object->setCodBankAccount($this->denormalizer->denormalize($data['codBankAccount'], 'PPLCZ\\Model\\Model\\BankAccountModel', 'json', $context));
-            unset($data['codBankAccount']);
-        }
         if (\array_key_exists('hasParcel', $data) && $data['hasParcel'] !== null) {
             $object->setHasParcel($data['hasParcel']);
             unset($data['hasParcel']);
@@ -252,9 +248,6 @@ class ShipmentModelNormalizer implements DenormalizerInterface, NormalizerInterf
         }
         if ($object->isInitialized('batchLabelGroup') && null !== $object->getBatchLabelGroup()) {
             $data['batchLabelGroup'] = $object->getBatchLabelGroup();
-        }
-        if ($object->isInitialized('codBankAccount') && null !== $object->getCodBankAccount()) {
-            $data['codBankAccount'] = $this->normalizer->normalize($object->getCodBankAccount(), 'json', $context);
         }
         if ($object->isInitialized('hasParcel') && null !== $object->getHasParcel()) {
             $data['hasParcel'] = $object->getHasParcel();

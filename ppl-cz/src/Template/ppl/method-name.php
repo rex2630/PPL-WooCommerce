@@ -4,8 +4,6 @@
 defined("WPINC") or die();
 ?>
     <img src='<?php echo esc_url($img) ?>' style='height: 1em;'>
-    <?php
-    echo $label_safe;
-    ?>
+    <?php echo $pplcz_label_safe; ?>
 
 

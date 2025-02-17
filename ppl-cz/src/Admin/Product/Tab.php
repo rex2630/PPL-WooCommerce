@@ -60,9 +60,7 @@ class Tab {
         >
         </div>
         <?php
-        JsTemplate::add_inline_script("
-window.PPLczPlugin.push(['pplczInitProductTab', 'pplcz_tab_overlay']);
-");
+        JsTemplate::add_inline_script("pplczInitProductTab", 'pplcz_tab_overlay');
     }
 
     public static function Save($post_id) {

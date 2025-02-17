@@ -142,21 +142,22 @@ class CPLOperation
             "body" =>  http_build_query($content),
         ]);
 
-        if ($response && isset($response['http_response']) && $response['http_response']->get_status() === 200) {
+        if ($response && !($response instanceof \WP_Error) && isset($response['http_response']) && $response['http_response']->get_status() === 200) {
             if ($content) {
                 $tokens = json_decode($response['body'], true);
                 add_option(pplcz_create_name("access_token"), $tokens["access_token"]) || update_option(pplcz_create_name("access_token"), $tokens["access_token"]);
                 return $tokens["access_token"];
             }
         } else {
-
             $errorMaker = "Url: {$url}\n";
-            $errorMaker .= $response['body'];
-            if ($content)
-                $errorMaker .= "\n" . $content;
-            else
-                $errorMaker .= "\nno content";
-
+            if ($response instanceof \WP_Error)
+                $errorMaker .=  $response->get_error_message();
+            else {
+                if (isset($response['body']) && $response['body'])
+                    $errorMaker .= $response['body'];
+                else
+                    $errorMaker .= "\nno content";
+            }
             set_transient(pplcz_create_name("access_token_error"),  $errorMaker, 1800);
         }
 

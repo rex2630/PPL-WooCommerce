@@ -100,7 +100,7 @@ class SettingV1RestController extends  PPLRestController
     public function available_printers()
     {
         $items = array_map(function ($item) {
-            return Serializer::getInstance()->normalize($item);
+            return pplcz_normalize($item);
         }, (new CPLOperation())->getAvailableLabelPrinters());
         $resp = new \WP_REST_Response();
         $resp->set_data($items);
@@ -135,7 +135,7 @@ class SettingV1RestController extends  PPLRestController
          * @var UpdateSyncPhasesModel $value
          */
         $params = $request->get_json_params();
-        $value = Serializer::getInstance()->denormalize($request->get_json_params(), UpdateSyncPhasesModel::class);
+        $value = pplcz_denormalize($request->get_json_params(), UpdateSyncPhasesModel::class);
 
         if ($value->isInitialized("phases")) {
             foreach ($value->getPhases() as $phase) {
@@ -186,8 +186,8 @@ class SettingV1RestController extends  PPLRestController
         $sender = AddressData::get_default_sender_addresses();
         foreach ($sender as $key => $value)
         {
-            $sender[$key] = Serializer::getInstance()->denormalize($value, SenderAddressModel::class);
-            $sender[$key] = Serializer::getInstance()->normalize($sender[$key], "array");
+            $sender[$key] = pplcz_denormalize($value, SenderAddressModel::class);
+            $sender[$key] = pplcz_normalize($sender[$key], "array");
         }
         $response = new \WP_REST_Response();
         $response->set_data($sender);
@@ -203,8 +203,8 @@ class SettingV1RestController extends  PPLRestController
 
         foreach ($sender as $key => $value)
         {
-            $sender[$key] = Serializer::getInstance()->denormalize($value, SenderAddressModel::class);
-            $validator->validate($sender[$key], $errors, "$key");
+            $sender[$key] = pplcz_denormalize($value, SenderAddressModel::class);
+            pplcz_validate($sender[$key], $errors, "$key");
         }
         if ($errors->errors)
             return new RestResponse400($errors);
@@ -212,7 +212,7 @@ class SettingV1RestController extends  PPLRestController
         foreach ($sender as $key => $value) {
             $addressId = $sender[$key]->getId();
             $address = new AddressData($addressId);
-            $sender[$key] = Serializer::getInstance()->denormalize($sender[$key], AddressData::class, null, ["data" => $address]);
+            $sender[$key] = pplcz_denormalize($sender[$key], AddressData::class, null, ["data" => $address]);
             $sender[$key]->save();
 
         }
@@ -232,8 +232,8 @@ class SettingV1RestController extends  PPLRestController
         if ($data) {
             foreach ($data as $key => $val)
             {
-                $val = Serializer::getInstance()->denormalize($val, BankAccountModel::class);
-                $data[$key] = Serializer::getInstance()->normalize($val, "array");
+                $val = pplcz_denormalize($val, BankAccountModel::class);
+                $data[$key] = pplcz_normalize($val, "array");
             }
             $response->set_data($data);
 
@@ -251,8 +251,8 @@ class SettingV1RestController extends  PPLRestController
 
         foreach ($accounts as $key => $value)
         {
-            $accounts[$key] = Serializer::getInstance()->denormalize($value, BankAccountModel::class);
-            $validator->validate($accounts[$key], $errors, "$key");
+            $accounts[$key] = pplcz_denormalize($value, BankAccountModel::class);
+            pplcz_validate($accounts[$key], $errors, "$key");
         }
         if ($errors->errors)
             return new RestResponse400($errors);
@@ -260,7 +260,7 @@ class SettingV1RestController extends  PPLRestController
         foreach ($accounts as $key => $value) {
             $bankAccountId = $accounts[$key]->getId();
             $bankAccount = new CodBankAccountData($bankAccountId);
-            $accounts[$key] = Serializer::getInstance()->denormalize($accounts[$key], CodBankAccountData::class, null, ["data" => $bankAccount]);
+            $accounts[$key] = pplcz_denormalize($accounts[$key], CodBankAccountData::class, null, ["data" => $bankAccount]);
             $accounts[$key]->save();
 
         }
@@ -282,7 +282,7 @@ class SettingV1RestController extends  PPLRestController
         /**
          * @var MyApi2 $setting
          */
-        $setting = Serializer::getInstance()->denormalize($data, MyApi2::class);
+        $setting = pplcz_denormalize($data, MyApi2::class);
 
         add_option($apiKey, $setting->getClientId()) || update_option($apiKey, $setting->getClientId());
         add_option($apiSecret, $setting->getClientSecret()) || update_option($apiSecret, $setting->getClientSecret());
@@ -313,7 +313,7 @@ class SettingV1RestController extends  PPLRestController
         $myapi2->setClientId(get_option($apiKey) ?: "");
         $myapi2->setClientSecret(get_option($apiSecret) ?: "");
 
-        $myapi2 = Serializer::getInstance()->normalize($myapi2, "array");
+        $myapi2 = pplcz_normalize($myapi2, "array");
 
         $response = new \WP_REST_Response();
         $response->set_data($myapi2);

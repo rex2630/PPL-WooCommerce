@@ -4,6 +4,7 @@ namespace PPLCZ\Validator;
 use PPLCZ\Model\Model\ProductModel;
 use PPLCZ\Model\Model\CartModel;
 use PPLCZ\Serializer;
+use PPLCZ\ShipmentMethod;
 use PPLCZ\Traits\ParcelDataModelTrait;
 
 class CartValidator extends ModelValidator {
@@ -59,7 +60,14 @@ class CartValidator extends ModelValidator {
                 $errors->add("parcelshop-shippingzip-required", "Nevalidní PSČ u doručovací adresy");
         }
 
-
+        if ($data->getParcelRequired() && $model->get_customer()->get_shipping_country() && $parcel)
+        {
+            $country = $model->get_customer()->get_shipping_country();
+            if ($country !== $parcel->getCountry())
+            {
+                $errors->add("parcelshop-shippingzip-required", "Země kontaktní (doručovací) adresy je jiná, než výdejního místa");
+            }
+        }
         return $errors;
     }
 

@@ -9,7 +9,11 @@ class JsTemplate
 
     public static $isAdded = false;
 
-    public static $content = [];
+
+
+    public static $pplcz_scripts = [];
+
+    public static $counter = 1;
 
     public static function scripts()
     {
@@ -18,11 +22,20 @@ class JsTemplate
         self::$isAdded = true;
     }
 
-    public static function add_inline_script($script_safe)
+    public static function add_inline_script($functionName, $element = null)
     {
-        self::scripts();
-        if (!in_array($script_safe, self::$content, true))
-            self::$content[] = $script_safe;
+        if (!self::$isAdded) {
+            add_action("admin_footer", [self::class, 'admin_scripts']);
+        }
+
+        self::$isAdded = true;
+
+        add_action("admin_footer", function() use ($functionName, $element) {
+            if ($element)
+                wp_add_inline_script("pplcz_plugin", sprintf("window.PPLczPlugin.push([%s, %s])", wp_json_encode(esc_html($functionName)), wp_json_encode(esc_html($element))));
+            else
+                wp_add_inline_script("pplcz_plugin", sprintf("window.PPLczPlugin.push([%s])", wp_json_encode(esc_html($functionName))));
+        });
     }
 
     public static function admin_scripts()
@@ -40,12 +53,7 @@ class JsTemplate
             "newCollectionUrl" => self::COLLECTIONURL,
             "ajax_url" => admin_url("admin-ajax.php")
         ]);
-
-        if (self::$content)
-        {
-            $script_safe = join("\r\n\r\n", array_merge(["window.PPLczPlugin = window.PPLczPlugin || [];"], self::$content));
-            wp_add_inline_script("pplcz_plugin", $script_safe);
-        }
+        wp_add_inline_script("pplcz_plugin", "window.PPLczPlugin = window.PPLczPlugin || [];");
     }
 
 }

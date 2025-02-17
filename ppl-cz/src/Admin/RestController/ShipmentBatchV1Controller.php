@@ -55,7 +55,7 @@ class ShipmentBatchV1Controller extends  PPLRestController
         /**
          * @var CreateShipmentLabelBatchModel $data
          */
-        $data = Serializer::getInstance()->denormalize($data, CreateShipmentLabelBatchModel::class);
+        $data = pplcz_denormalize($data, CreateShipmentLabelBatchModel::class);
         $print = $data->getPrintSetting();
 
         if ($print)
@@ -79,8 +79,8 @@ class ShipmentBatchV1Controller extends  PPLRestController
         $output = [];
         foreach ($data->getShipmentId() as $id) {
             $item = new ShipmentData($id);
-            $item = Serializer::getInstance()->denormalize($item, ShipmentModel::class);
-            $item = Serializer::getInstance()->normalize($item, "array");
+            $item = pplcz_denormalize($item, ShipmentModel::class);
+            $item = pplcz_normalize($item, "array");
             $output[] = $item;
         }
         $resp->set_data($output);
@@ -95,7 +95,7 @@ class ShipmentBatchV1Controller extends  PPLRestController
         /**
          * @var PrepareShipmentBatchModel $data
          */
-        $data = Serializer::getInstance()->denormalize($data, PrepareShipmentBatchModel::class);
+        $data = pplcz_denormalize($data, PrepareShipmentBatchModel::class);
         $error = new Errors();
 
         foreach ($data->getItems() as $key => $item) {
@@ -108,16 +108,16 @@ class ShipmentBatchV1Controller extends  PPLRestController
                     /**
                      * @var ShipmentModel $shipmentModel
                      */
-                    $shipmentModel = Serializer::getInstance()->denormalize($shipmentData, ShipmentModel::class);
-                    Validator::getInstance()->validate($shipmentModel, $error, "item.$key");
+                    $shipmentModel = pplcz_denormalize($shipmentData, ShipmentModel::class);
+                    pplcz_validate($shipmentModel, $error, "item.$key");
                 }
             }
             else if ($item->getOrderId())
             {
                 $order = new \WC_Order($item->getOrderId());
                 if (self::hasPPLShipment($order)) {
-                    $shipmentModel = Serializer::getInstance()->denormalize($order, ShipmentModel::class);
-                    Validator::getInstance()->validate($shipmentModel, $error, "item.$key");
+                    $shipmentModel = pplcz_denormalize($order, ShipmentModel::class);
+                    pplcz_validate($shipmentModel, $error, "item.$key");
 
                 } else {
                     $error->add("item.$key", "Nelze automaticky vytvořit zásilku");
@@ -141,8 +141,8 @@ class ShipmentBatchV1Controller extends  PPLRestController
             else if ($item->getOrderId())
             {
                 $order = new \WC_Order($item->getOrderId());
-                $shipmentModel = Serializer::getInstance()->denormalize($order, ShipmentModel::class);
-                $shipmentData = Serializer::getInstance()->denormalize($shipmentModel, ShipmentData::class);
+                $shipmentModel = pplcz_denormalize($order, ShipmentModel::class);
+                $shipmentData = pplcz_denormalize($shipmentModel, ShipmentData::class);
                 $shipmentData->save();
                 $output[$key] = $shipmentData->get_id();
             }
@@ -152,7 +152,7 @@ class ShipmentBatchV1Controller extends  PPLRestController
         $model->setShipmentId($output);
 
         $resp = new \WP_REST_Response();
-        $resp->set_data(Serializer::getInstance()->normalize($model, "array"));
+        $resp->set_data(pplcz_normalize($model, "array"));
         return $resp;
     }
 
@@ -163,7 +163,7 @@ class ShipmentBatchV1Controller extends  PPLRestController
         /**
          * @var ShipmentLabelRefreshBatchModel $data
          */
-        $data = Serializer::getInstance()->denormalize($data, ShipmentLabelRefreshBatchModel::class);
+        $data = pplcz_denormalize($data, ShipmentLabelRefreshBatchModel::class);
         $output = [];
 
         $batchs = [];
@@ -180,14 +180,14 @@ class ShipmentBatchV1Controller extends  PPLRestController
 
         foreach ($data->getShipmentId() as $item) {
             $shipmentData = new ShipmentData($item);
-            $output[] = Serializer::getInstance()->denormalize($shipmentData, ShipmentModel::class);
+            $output[] = pplcz_denormalize($shipmentData, ShipmentModel::class);
             $ids[] = $shipmentData->get_batch_label_group();
         }
 
         $refresh = new RefreshShipmentBatchReturnModel();
         $refresh->setShipments($output);
         $refresh->setBatchs(array_filter($ids));
-        $data = Serializer::getInstance()->normalize($refresh, "array");
+        $data = pplcz_normalize($refresh, "array");
         $resp = new \WP_REST_Response();
         $resp->set_data($data);
 

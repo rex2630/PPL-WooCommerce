@@ -162,6 +162,7 @@ type InputType = [
 
   const PPLczPlugin = {
     push: (input: InputType) => {
+
       const [method, elementId] = input;
       const args = input[2] || {};
       const returnFunc = input[2]?.returnFunc || ((args: Record<string, any>) => {});
@@ -170,8 +171,8 @@ type InputType = [
         throw new Error(`method ${method} not found`);
       }
 
-      const element = getELement(elementId);
-      if (!element) {
+      const element = elementId ? getELement(elementId) : null;
+      if (!element && elementId) {
         throw new Error(`element ${element} not found`);
       }
 
@@ -179,13 +180,28 @@ type InputType = [
         methods["wpUpdateStyle"]();
       }
       if (method in methods) {
-        // @ts-ignore
-        const retData = methods[method](element, args);
-        returnFunc(retData);
+        if (element) {
+          // @ts-ignore
+          const retData = methods[method](element, args);
+          returnFunc(retData);
+        }
+        else {
+          // @ts-ignore
+          const retData = methods[method](args);
+          returnFunc(retData);
+        }
+
       } else if (method in PPLczPlugin) {
-        // @ts-ignore
-        const retData = PPLczPlugin[method](element, args);
-        returnFunc(retData);
+        if (element) {
+          // @ts-ignore
+          const retData = PPLczPlugin[method](element, args);
+          returnFunc(retData);
+        }
+        else {
+          // @ts-ignore
+          const retData = PPLczPlugin[method](args);
+          returnFunc(retData);
+        }
       }
     },
     // @ts-ignore

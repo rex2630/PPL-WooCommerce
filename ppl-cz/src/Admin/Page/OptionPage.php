@@ -18,10 +18,8 @@ class OptionPage {
             <div id="pplcz_options" ></div>
         </div>
         <?php
-        JsTemplate::add_inline_script("
-window.PPLczPlugin.push(['wpUpdateStyle', 'pplcz_options']);
-window.PPLczPlugin.push(['optionsPage', 'pplcz_options'])
-");
+        JsTemplate::add_inline_script("wpUpdateStyle", "pplcz_options");
+        JsTemplate::add_inline_script("optionsPage", "pplcz_options");
     }
 
     public static function page_hook()

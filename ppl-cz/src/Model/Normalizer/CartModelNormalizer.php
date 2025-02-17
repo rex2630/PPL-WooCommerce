@@ -68,6 +68,10 @@ class CartModelNormalizer implements DenormalizerInterface, NormalizerInterface,
         elseif (\array_key_exists('mapEnabled', $data) && $data['mapEnabled'] === null) {
             $object->setMapEnabled(null);
         }
+        if (\array_key_exists('disabledByCountry', $data)) {
+            $object->setDisabledByCountry($data['disabledByCountry']);
+            unset($data['disabledByCountry']);
+        }
         if (\array_key_exists('ageRequired', $data) && $data['ageRequired'] !== null) {
             $object->setAgeRequired($data['ageRequired']);
             unset($data['ageRequired']);
@@ -81,6 +85,10 @@ class CartModelNormalizer implements DenormalizerInterface, NormalizerInterface,
         }
         elseif (\array_key_exists('codPayment', $data) && $data['codPayment'] === null) {
             $object->setCodPayment(null);
+        }
+        if (\array_key_exists('serviceCode', $data)) {
+            $object->setServiceCode($data['serviceCode']);
+            unset($data['serviceCode']);
         }
         if (\array_key_exists('disablePayments', $data) && $data['disablePayments'] !== null) {
             $values = array();
@@ -140,11 +148,17 @@ class CartModelNormalizer implements DenormalizerInterface, NormalizerInterface,
         if ($object->isInitialized('mapEnabled') && null !== $object->getMapEnabled()) {
             $data['mapEnabled'] = $object->getMapEnabled();
         }
+        if ($object->isInitialized('disabledByCountry') && null !== $object->getDisabledByCountry()) {
+            $data['disabledByCountry'] = $object->getDisabledByCountry();
+        }
         if ($object->isInitialized('ageRequired') && null !== $object->getAgeRequired()) {
             $data['ageRequired'] = $object->getAgeRequired();
         }
         if ($object->isInitialized('codPayment') && null !== $object->getCodPayment()) {
             $data['codPayment'] = $object->getCodPayment();
+        }
+        if ($object->isInitialized('serviceCode') && null !== $object->getServiceCode()) {
+            $data['serviceCode'] = $object->getServiceCode();
         }
         if ($object->isInitialized('disablePayments') && null !== $object->getDisablePayments()) {
             $values = array();

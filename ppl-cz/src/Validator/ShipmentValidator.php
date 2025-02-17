@@ -49,7 +49,7 @@ class ShipmentValidator extends ModelValidator
             }
 
             foreach ($model->getPackages() as $key=>$package) {
-                Validator::getInstance()->validate($package, $errors, "{$path}.packages.{$key}");
+                \PPLCZ\Validator\Validator::getInstance()->validate($package, $errors, "{$path}.packages.{$key}");
             }
 
 
@@ -65,7 +65,7 @@ class ShipmentValidator extends ModelValidator
                     $errors->add("$path.{$item}", $message);
                 }
                 else if ($item === "sender" || $item === "recipient") {
-                    Validator::getInstance()->validate($this->getValue($model, $item), $errors, "$path.$item");
+                    \PPLCZ\Validator\Validator::getInstance()->validate($this->getValue($model, $item), $errors, "$path.$item");
                 }
             }
 

@@ -118,6 +118,8 @@ class OrderTable {
         ], 200);
     }
 
+    private static $jsInitTab = false;
+
     public static function render_column($column_name, $order)
     {
 
@@ -148,7 +150,7 @@ class OrderTable {
 
             foreach ($shipments as $key => $shipment) {
                 $tests = new Errors();
-                Validator::getInstance()->validate($shipment, $tests, "");
+                pplcz_validate($shipment, $tests, "");
                 if ($tests->errors)
                 {
                     $jsShipmentsOk[$key] = false;
@@ -157,9 +159,12 @@ class OrderTable {
                     $jsShipmentsOk[$key] = true;
                 }
             }
-            JsTemplate::add_inline_script("
-PPLczPlugin.push(['pplczInitOrderTable', jQuery('table')[0]]);
-");
+
+            if (!self::$jsInitTab)
+                JsTemplate::add_inline_script('pplczInitOrderTable');
+
+            self::$jsInitTab = true;
+
             wc_get_template("ppl/admin/order-table-column.php", [
                 "order"=> $order,
                 "shipments" => $shipments,

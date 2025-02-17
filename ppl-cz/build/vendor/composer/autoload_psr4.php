@@ -44,7 +44,7 @@ return array(
     'PPLCZVendor\\Humbug\\PhpScoper\\' => array($vendorDir . '/humbug/php-scoper/src'),
     'PPLCZVendor\\Http\\Promise\\' => array($vendorDir . '/php-http/promise/src'),
     'PPLCZVendor\\Http\\Message\\MultipartStream\\' => array($vendorDir . '/php-http/multipart-stream-builder/src'),
-    'PPLCZVendor\\Http\\Message\\' => array($vendorDir . '/php-http/message/src', $vendorDir . '/php-http/message-factory/src'),
+    'PPLCZVendor\\Http\\Message\\' => array($vendorDir . '/php-http/message-factory/src', $vendorDir . '/php-http/message/src'),
     'PPLCZVendor\\Http\\Discovery\\' => array($vendorDir . '/php-http/discovery/src'),
     'PPLCZVendor\\Http\\Client\\Common\\' => array($vendorDir . '/php-http/client-common/src'),
     'PPLCZVendor\\Http\\Client\\' => array($vendorDir . '/php-http/httplug/src'),

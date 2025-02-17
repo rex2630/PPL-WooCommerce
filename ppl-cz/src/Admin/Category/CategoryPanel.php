@@ -59,18 +59,16 @@ class CategoryPanel {
     private static function renderForm($categoryModel, $asTd)
     {
         $shipments = self::get_shipping();
-        $element_safe = $asTd ? "tr" : "div";
+        $pplcz_element_safe = $asTd ? "tr" : "div";
 
 ?>
-        <<?php echo $element_safe ?> id="pplcz_tab"
+        <<?php echo $pplcz_element_safe ?> id="pplcz_tab"
                          data-pplNonce='<?php echo esc_html(wp_create_nonce("category")) ?>'
                          data-data='<?php echo esc_html(wp_json_encode(pplcz_normalize($categoryModel))) ?>'
                          data-methods='<?php echo esc_html(wp_json_encode($shipments)) ?>'>
-        </<?php echo $element_safe ?>>
+        </<?php echo $pplcz_element_safe ?>>
 <?php
-        JsTemplate::add_inline_script("
-window.PPLczPlugin.push(['pplczInitCategoryTab', 'pplcz_tab']);        
-");
+        JsTemplate::add_inline_script("pplczInitCategoryTab", "pplcz_tab");
     }
 
     public static function render($taxonomy = null)
