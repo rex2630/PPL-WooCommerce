@@ -180,7 +180,7 @@ class ShipmentV1RestController extends PPLRestController
         $shipment = $this->getShipment($request->get_param("id"));
         if ($shipment instanceof \WP_REST_Response)
             return $shipment;
-        $shipment = pplcz_denormalize($sender, ShipmentData::class, null, ["data" => $shipment]);
+        $shipment = pplcz_denormalize($sender, ShipmentData::class, ["data" => $shipment]);
         $shipment->set_import_errors(null);
         $shipment->save();
         $resp = new \WP_REST_Response();
@@ -228,7 +228,7 @@ class ShipmentV1RestController extends PPLRestController
         if ($shipment instanceof \WP_REST_Response)
             return $shipment;
         if (isset($esp))
-            $parcel = pplcz_denormalize($esp, ParcelData::class, null, ["data" => $founded]);
+            $parcel = pplcz_denormalize($esp, ParcelData::class, ["data" => $founded]);
         else
             $parcel = $founded;
         $parcel->save();
@@ -276,7 +276,7 @@ class ShipmentV1RestController extends PPLRestController
             return new RestResponse400($err);
 
 
-        $shipment = pplcz_denormalize($shipmentModel, ShipmentData::class, null, ["data" => $shipment]);
+        $shipment = pplcz_denormalize($shipmentModel, ShipmentData::class, ["data" => $shipment]);
         $shipment->set_import_errors(null);
         $shipment->save();
 

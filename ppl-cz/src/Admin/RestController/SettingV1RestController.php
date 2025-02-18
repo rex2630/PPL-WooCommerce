@@ -39,17 +39,6 @@ class SettingV1RestController extends  PPLRestController
             ]
         ]);
 
-        register_rest_route($this->namespace, "/". $this->base . "/bankAccounts", [
-            [
-                "methods"=>\WP_REST_Server::EDITABLE,
-                "permission_callback"=>[$this, "check_permission"],
-                "callback" => [$this, "update_bank_account"],
-            ], [
-                "methods"=>\WP_REST_Server::READABLE,
-                "callback" => [$this, "get_bank_account"],
-                "permission_callback"=>[$this, "check_permission"],
-            ]
-        ]);
 
         register_rest_route($this->namespace, "/". $this->base . "/sender-addresses", [
             [
@@ -212,7 +201,7 @@ class SettingV1RestController extends  PPLRestController
         foreach ($sender as $key => $value) {
             $addressId = $sender[$key]->getId();
             $address = new AddressData($addressId);
-            $sender[$key] = pplcz_denormalize($sender[$key], AddressData::class, null, ["data" => $address]);
+            $sender[$key] = pplcz_denormalize($sender[$key], AddressData::class, ["data" => $address]);
             $sender[$key]->save();
 
         }
@@ -225,51 +214,6 @@ class SettingV1RestController extends  PPLRestController
 
     }
 
-    public function get_bank_account()
-    {
-        $data = CodBankAccountData::get_default_bank_accounts();
-        $response = new \WP_REST_Response();
-        if ($data) {
-            foreach ($data as $key => $val)
-            {
-                $val = pplcz_denormalize($val, BankAccountModel::class);
-                $data[$key] = pplcz_normalize($val, "array");
-            }
-            $response->set_data($data);
-
-        } else {
-            $response->set_data([]);
-        }
-        return $response;
-    }
-
-    public function update_bank_account(\WP_REST_Request $request)
-    {
-        $accounts = $request->get_json_params();
-        $validator = Validator::getInstance();
-        $errors = new Errors();
-
-        foreach ($accounts as $key => $value)
-        {
-            $accounts[$key] = pplcz_denormalize($value, BankAccountModel::class);
-            pplcz_validate($accounts[$key], $errors, "$key");
-        }
-        if ($errors->errors)
-            return new RestResponse400($errors);
-
-        foreach ($accounts as $key => $value) {
-            $bankAccountId = $accounts[$key]->getId();
-            $bankAccount = new CodBankAccountData($bankAccountId);
-            $accounts[$key] = pplcz_denormalize($accounts[$key], CodBankAccountData::class, null, ["data" => $bankAccount]);
-            $accounts[$key]->save();
-
-        }
-
-        CodBankAccountData::set_default_bank_accounts($accounts);
-        $response = new \WP_REST_Response();
-        $response->set_status(204);
-        return $response;
-    }
 
     public function update_api(\WP_REST_Request $request)
     {
