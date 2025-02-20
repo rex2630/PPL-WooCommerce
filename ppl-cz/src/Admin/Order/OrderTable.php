@@ -19,7 +19,7 @@ class OrderTable {
 
     public static function custom_columns($columns, $post_type = null)
     {
-        return array_merge($columns, ["ppl" => "PPL"]);
+        return array_merge($columns, ["pplcz" => "PPL"]);
     }
 
     public static function create_shipment()
@@ -79,7 +79,7 @@ class OrderTable {
         foreach ($orderIds as $orderId) {
             $order = new  \WC_Order((int)sanitize_key($orderId));
             ob_start();
-            self::render_column("ppl", $order);
+            self::render_column("pplcz", $order);
             $response = ob_get_clean();
             $output[$orderId] = $response;
         }
@@ -111,7 +111,7 @@ class OrderTable {
             ]);
         }
         ob_start();
-        self::render_column("ppl", $order);
+        self::render_column("pplcz", $order);
         $response = ob_get_clean();
         wp_send_json_success([
             "html" => $response
@@ -123,7 +123,7 @@ class OrderTable {
     public static function render_column($column_name, $order)
     {
 
-        if($column_name === "ppl") {
+        if($column_name === "pplcz") {
             if (is_string($order) || is_int($order))
                 $order = new \WC_Order($order);
 
@@ -173,6 +173,8 @@ class OrderTable {
             ]);
         }
     }
+
+
 
     public static function register()
     {

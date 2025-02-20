@@ -44,7 +44,7 @@ class Map {
             $vars['ppl_parcelbox'] = intval(@$vars['ppl_parcelbox'] ?: "0");
             $vars['ppl_parcelshop'] = intval(@$vars['ppl_parcelshop'] ?: "0");
             $vars['ppl_address'] = @$vars['ppl_address'] ?: null;
-            $vars['ppl_country'] = @$vars['ppl_country'] ?: null;
+            $vars['ppl_country'] = @$vars['ppl_country'] ? strtolower(@$vars['ppl_country']) : null;
         }
         return $vars;
     }

@@ -68,26 +68,17 @@ class PackageDataStore extends PPLDataStore
         if (!$phases)
             return [];
 
-              $sql = $wpdb->prepare(
-"
-    select * from {$wpdb->prefix}pplcz_package where phase in ($phases_safe) 
-    and (last_update_phase >= %s or last_update_phase is null) 
-    and shipment_number is not null and shipment_number <> '' 
-    and (last_test_phase < %s or last_test_phase is null)
-    order by last_test_phase asc
-    limit %d
-", array_merge([$last_change_phase], $phases, [$limit])
-);
-       /*
-       $sql = "select * from {$wpdb->prefix}pplcz_package where phase in ($phases) and (last_update_phase >= %s or last_update_phase is null) and shipment_number is not null and shipment_number <> '' ";
-       $sql .=  " and (last_test_phase < %s or last_test_phase is null) ";
-       $args[] = $from_last_test_phase;
+        $args = array_merge($phases, [$last_change_phase, $from_last_test_phase], [$limit]);
+        $query = "select * from {$wpdb->prefix}pplcz_package where phase in ($phases_safe) 
+and (last_update_phase >= %s or last_update_phase is null) 
+and shipment_number is not null and shipment_number <> '' 
+and (last_test_phase < %s or last_test_phase is null)
+order by last_test_phase asc
+limit %d";
+              $sql = $wpdb->prepare($query, ...$args);
 
-       $sql .= " order by last_test_phase asc";
-       $sql .= " limit %d";
-       $args[] = $limit;
-       $sql = $wpdb->prepare($sql, ...$args);*/
        $output = [];
+
        foreach ($wpdb->get_results($sql, ARRAY_A) as $result) {
            wp_cache_add($result["ppl_package_id"], $result, "pplcz_package");
            $output[] = new PackageData($result["ppl_package_id"]);

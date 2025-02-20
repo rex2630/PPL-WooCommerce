@@ -208,8 +208,13 @@ function pplcz_tables ($activate = false) {
         add_action("admin_init", function() use ($activate) {
             as_unschedule_action("woocommerceppl_refresh_shipments_cron");
             as_unschedule_action("woocommerceppl_refresh_setting_cron");
-            as_schedule_recurring_action(time(), 60 * 120, "pplcz_refresh_shipments_cron");
-            as_schedule_recurring_action(time(), 60 * 60 * 24, "pplcz_refresh_setting_cron");
+            as_unschedule_action(pplcz_create_name("refresh_shipments_cron"));
+            as_unschedule_action(pplcz_create_name("refresh_setting_cron"));
+            as_unschedule_all_actions(pplcz_create_name("refresh_setting_cron"));
+            as_unschedule_all_actions(pplcz_create_name("refresh_shipments_cron"));
+
+            as_schedule_recurring_action(time(), 60 * 60 * 6, pplcz_create_name("refresh_shipments_cron"));
+            as_schedule_recurring_action(time(), 60 * 60 * 24, pplcz_create_name("refresh_setting_cron"));
 
             if (!$activate)
                 add_option(pplcz_create_name("version"), pplcz_get_version()) || update_option(pplcz_create_name("version"), pplcz_get_version());
@@ -243,7 +248,7 @@ function pplcz_activate () {
 
 function pplcz_deactivate()
 {
-    as_unschedule_action("pplcz_refresh_shipments_cron");
-    as_unschedule_action("pplcz_refresh_setting_cron");
+    as_unschedule_action(pplcz_create_name("refresh_shipments_cron"));
+    as_unschedule_action(pplcz_create_name("refresh_setting_cron"));
 }
 

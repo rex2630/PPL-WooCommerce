@@ -49,12 +49,14 @@ class OrderFilter {
     public static function woocommerce_query_vars($query_vars)
     {
         $query_vars['pplcz_batch'] = sanitize_text_field(wp_unslash(isset($_REQUEST['pplcz_batch']) ? $_REQUEST['pplcz_batch'] : '' ));
+        $query_vars['pplcz_status'] = sanitize_text_field(wp_unslash(isset($_REQUEST['pplcz-status']) ? $_REQUEST['pplcz-status'] : '' ));;
         return $query_vars;
     }
 
     public static function query_vars($query_vars)
     {
         $query_vars[] = 'pplcz_batch';
+        $query_vars[] = 'pplcz_status';
         return $query_vars;
     }
 
@@ -91,15 +93,46 @@ class OrderFilter {
         global $wpdb;
 
         if (isset($args["s"]) && $args['s'] && isset($args['search_filter']) && $args["search_filter"] === 'all') {
-            $q = str_replace("likeMaker", "%", $wpdb->prepare(" {$wpdb->prefix}wc_orders.id in (select pplczfilter_a.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_a join {$wpdb->prefix}pplcz_package pplczfilter_b on pplczfilter_b.ppl_shipment_id = pplczfilter_a.ppl_shipment_id where pplczfilter_b.shipment_number like %s )", $args['s'] . "likeMaker"));
-            $sql["where"] = preg_replace("~ OR ~", " OR ($q) OR ", $sql['where'] , 1);
+            if (strpos($sql['where'], 'pplczfilter') === false) {
+                $q = str_replace("likeMaker", "%", $wpdb->prepare(" {$wpdb->prefix}wc_orders.id in (select pplczfilter_a.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_a join {$wpdb->prefix}pplcz_package pplczfilter_b on pplczfilter_b.ppl_shipment_id = pplczfilter_a.ppl_shipment_id where pplczfilter_b.shipment_number like %s )", $args['s'] . "likeMaker"));
+                $sql["where"] = preg_replace("~ OR ~", " OR ($q) OR ", $sql['where'], 1);
+            }
         }
         if (isset($args["pplcz_batch"]) && $args['pplcz_batch'])
         {
-            $q = $wpdb->prepare(" AND {$wpdb->prefix}wc_orders.id in (select pplczfilter_a.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_a where pplczfilter_a.batch_label_group = %s )", $args["pplcz_batch"]);
-            $sql["where"] .= $q;
+            if (strpos($sql['where'], 'pplczfilter_c') === false) {
+                $q = $wpdb->prepare(" AND {$wpdb->prefix}wc_orders.id in (select pplczfilter_c.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczfilter_c where pplczfilter_c.batch_label_group = %s )", $args["pplcz_batch"]);
+                $sql["where"] .= $q;
+            }
+        }
+        if (isset($args['pplcz_status']))
+        {
+            switch ($args['pplcz_status'])
+            {
+                case 'none':
+                    if (strpos($sql['where'], 'pplczship') === false) {
+                        $q = ["select pplczship.wc_order_id from {$wpdb->prefix}pplcz_shipment pplczship where (import_state not in ( 'Order', 'Complete') )"];
+                        $q[] = "select pplcz_wi.order_id as wc_order_id from {$wpdb->prefix}woocommerce_order_items pplcz_wi join {$wpdb->prefix}woocommerce_order_itemmeta pplcz_woi on pplcz_woi.order_item_id = pplcz_wi.order_item_id  where meta_key = 'method_id' and meta_value like 'pplcz_%' and pplcz_wi.order_id not in (select wc_order_id from {$wpdb->prefix}pplcz_shipment pplczpack)";
+                        $sql['where'] .= sprintf(" AND {$wpdb->prefix}wc_orders.id in (%s) AND (wp_wc_orders.status = 'wc-processing') ", join(" UNION ", $q));
+                    }
+                    break;
+                case 'print':
+                    if (strpos($sql['where'], 'pplczpack') === false) {
+                        $sql['where'] .= " AND {$wpdb->prefix}wc_orders.id in (select wc_order_id  from {$wpdb->prefix}pplcz_package pplczpack where phase = 'Order' or phase = 'None') ";
+                    }
+                    break;
+            }
         }
 
+        static $inserted;
+        if (!$inserted && isset($args['pplcz_status'])) {
+            $inserted = true;
+            add_filter("views_woocommerce_page_wc-orders", function ($view) use ($args) {
+                $view[] = sprintf("<a href='%s' class='%s'>PPL - příprava zásilek </a>", admin_url("admin.php?page=wc-orders&pplcz-status=none"), $args['pplcz_status'] === 'none' ? 'current' : '');
+                $view[] = sprintf("<a href='%s' class='%s'>PPL - k odeslání </a>", admin_url("admin.php?page=wc-orders&pplcz-status=print"), $args['pplcz_status'] === 'print' ? 'current' : '');
+                return $view;
+            });
+        }
         return $sql;
     }
 

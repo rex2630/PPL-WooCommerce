@@ -727,19 +727,21 @@ class CPLOperation
                 return "{$package->get_shipment_number()}" === "$shipmentNumber";
             }) as $key => $package) {
                 unset($db[$key]);
+
+                $phase = $data['phase'];
+                if ($phase === null)
+                    $phase = 'Canceled';
+                $status = $data['status'];
+
                 /**
                  * @var PackageData $package
                  */
-                if ($package->get_phase() !== $data['phase']
-                    || $package->get_status() !== $data['status'] ) {
+                if ($package->get_phase() !== $phase
+                    || (''.$package->get_status()) !== (''.$status) ) {
 
-
-                    if ($data['phase'] === null)
-                        $data['phase'] = 'Canceled';
-
-                    $package->set_status($data["status"]);
+                    $package->set_status($status);
                     $package->set_status_label(@$statuses[$data['status']]);
-                    $package->set_phase($data["phase"]);
+                    $package->set_phase($phase);
                     $package->set_phase_label($data['name']);
                     $package->set_last_update_phase(gmdate("Y-m-d H:i:s"));
                     $package->set_last_test_phase(gmdate("Y-m-d H:i:s"));
