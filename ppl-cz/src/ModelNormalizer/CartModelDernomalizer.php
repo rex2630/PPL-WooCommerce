@@ -46,6 +46,11 @@ class CartModelDernomalizer implements DenormalizerInterface
         $shipmentCartModel->setMapEnabled(false);
         $shipmentCartModel->setDisabledByCountry(false);
         $shipmentCartModel->setAgeRequired(false);
+        $shipmentCartModel->setDisabledByRules(false);
+        $shipmentCartModel->setParcelShopEnabled(true);
+        $shipmentCartModel->setParcelBoxEnabled(true);
+        $shipmentCartModel->setAlzaBoxEnabled(true);
+
 
         $serviceCode = str_replace(pplcz_create_name(''), '', $data->id);
         // preklad
@@ -53,6 +58,8 @@ class CartModelDernomalizer implements DenormalizerInterface
 
         if (CartValidator::ageRequired(WC()->cart, $serviceCode)) {
             $shipmentCartModel->setAgeRequired(true);
+            $shipmentCartModel->setParcelBoxEnabled(false);
+            $shipmentCartModel->setAlzaBoxEnabled(false);
         }
 
         if (!isset($countries[$country]))
@@ -129,13 +136,8 @@ class CartModelDernomalizer implements DenormalizerInterface
             $max = @$maxCodPrice[0]['max'];
             if ($max !== '' && $max !== null && $total >= $max) {
                 $shipmentCartModel->setDisableCod(true);
-                if (@$data->get_instance_option("cost_order_free_{$currency}") >= $total) {
-                    $shipmentCartModel->setCodFee(0);
-                    $shipmentCartModel->setCost(0);
-                } else {
-                    $shipmentCartModel->setCodFee(0);
-                    $shipmentCartModel->setCost(@$data->get_instance_option("cost_{$currency}") ?: 0);
-                }
+                $shipmentCartModel->setCodFee(100000);
+                $shipmentCartModel->setCost(100000);
             } else {
                 $isCod = $paymentMethod === $shipmentCartModel->getCodPayment();
                 $freeCodPrice = @$data->get_instance_option("cost_order_free_cod_{$currency}");
@@ -183,6 +185,10 @@ class CartModelDernomalizer implements DenormalizerInterface
                 break;
             }
 
+            $shipmentCartModel->setParcelBoxEnabled( !$productModel->getPplDisabledParcelBox() && $shipmentCartModel->getParcelBoxEnabled() );
+            $shipmentCartModel->setParcelShopEnabled(!$productModel->getPplDisabledParcelShop() && $shipmentCartModel->getParcelShopEnabled() );
+            $shipmentCartModel->setAlzaBoxEnabled(!$productModel->getPplDisabledAlzaBox() && $shipmentCartModel->getAlzaBoxEnabled() );
+
             $get_parents = $product->get_category_ids();
             $ids = [];
 
@@ -197,8 +203,8 @@ class CartModelDernomalizer implements DenormalizerInterface
                     $get_parents[] = $parId;
             }
 
-            foreach ($ids as $priceWithDph) {
-                $term = get_term($priceWithDph);
+            foreach ($ids as $category_id) {
+                $term = get_term($category_id);
                 $categoryModel = Serializer::getInstance()->denormalize($term, CategoryModel::class);
 
                 if (in_array($codServiceCode, $categoryModel->getPplDisabledTransport() ?? [], true)) {
@@ -208,8 +214,23 @@ class CartModelDernomalizer implements DenormalizerInterface
                     $shipmentCartModel->setDisabledByProduct(true);
                     break 2;
                 }
+
+                $shipmentCartModel->setParcelBoxEnabled(!$categoryModel->getPplDisabledParcelBox() && $shipmentCartModel->getParcelBoxEnabled() );
+                $shipmentCartModel->setParcelShopEnabled(!$categoryModel->getPplDisabledParcelShop() && $shipmentCartModel->getParcelShopEnabled() );
+                $shipmentCartModel->setAlzaBoxEnabled(!$categoryModel->getPplDisabledAlzaBox() && $shipmentCartModel->getAlzaBoxEnabled() );
             }
         }
+
+        if (!$shipmentCartModel->getParcelShopEnabled() && !$shipmentCartModel->getParcelBoxEnabled() && !$shipmentCartModel->getAlzaBoxEnabled() && $shipmentCartModel->getParcelRequired())
+        {
+            $shipmentCartModel->setDisabledByRules(true);
+        }
+
+        if (!$shipmentCartModel->getParcelShopEnabled() && $shipmentCartModel->getAgeRequired())
+        {
+            $shipmentCartModel->setDisabledByRules(true);
+        }
+
         // kupony
         $coupons = WC()->cart->get_applied_coupons();
         foreach ($coupons as $coupon)

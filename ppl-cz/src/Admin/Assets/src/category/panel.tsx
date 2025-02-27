@@ -26,6 +26,27 @@ const Tab = (props: { data:  Data, methods: ShipmentMethodModel[], pplNonce: str
     },[props.methods])
 
     return <p className={"form-field"}>
+        <div>
+        <label style={float}><strong>Seznam zakázaných míst (pro výdejní místa)</strong></label>
+        </div>
+        <div>
+            <label style={float}>
+                <input id="pplDisabledParcelBox" value={`1`} type={"checkbox"}  {...register('pplDisabledParcelBox')}/>
+                &nbsp; ParcelBoxy</label>
+        </div>
+        <div>
+            <label style={float}>
+                <input id="pplDisabledAlzaBox" value={`1`} type={"checkbox"}  {...register('pplDisabledAlzaBox')}/>
+                &nbsp; AlzaBoxy</label>
+        </div>
+        <div>
+            <label style={float}>
+                <input id={`pplDisabledParcelShop`} value={`1`}
+                       type={"checkbox"} {...register('pplDisabledParcelShop')}/>
+                &nbsp; Obchody</label>
+        </div>
+        <label style={float}><strong>Seznam zakázaných metod pro PPL</strong></label>
+
         {methods.map(shipment => {
             return <Controller
                 control={control}
@@ -37,7 +58,8 @@ const Tab = (props: { data:  Data, methods: ShipmentMethodModel[], pplNonce: str
                     return <div>
                         <label style={float} htmlFor={`pplDisabledTransport_${shipment.code}`}>
                             <input type={`hidden`} {...register("pplNonce")}/>
-                            <input value={`${shipment.code}`} style={float} id={`pplDisabledTransport_${shipment.code}`} type={"checkbox"}
+                            <input value={`${shipment.code}`} style={float} id={`pplDisabledTransport_${shipment.code}`}
+                                   type={"checkbox"}
                                    name={`pplDisabledTransport[]`}
                                    checked={checked}
                                    onChange={x => {

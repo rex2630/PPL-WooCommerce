@@ -13,6 +13,16 @@ export interface components {
     ProductModel: {
       pplConfirmAge15?: boolean | null;
       pplConfirmAge18?: boolean | null;
+      pplDisabledParcelBox?: boolean | null;
+      pplDisabledAlzaBox?: boolean;
+      pplDisabledParcelShop?: boolean | null;
+      pplDisabledTransport?: string[] | null;
+    };
+    CategoryModel: {
+      pplDisabledParcelBox?: boolean | null;
+      pplDisabledAlzaBox?: boolean;
+      pplDisabledParcelShop?: boolean | null;
+      pplDisabledTransport?: string[] | null;
     };
     ParcelDataModel: {
       name?: string | null;
@@ -67,9 +77,6 @@ export interface components {
     };
     UpdateShipmentSenderModel: {
       senderId: number | null;
-    };
-    UpdateShipmentBankAccountModel: {
-      bankAccountId: number | null;
     };
     UpdateShipmentParcelModel: {
       parcelCode: string | null;
@@ -161,22 +168,20 @@ export interface components {
       mail?: string | null;
       phone?: string | null;
     };
-    BankAccountModel: {
-      id?: number | null;
-      accountName?: string | null;
-      account?: string | null;
-      accountPrefix?: string | null;
-      bankCode?: string | null;
-      iban?: string | null;
-      swift?: string | null;
-      currency?: string | null;
-    };
-    ShipmentCartModel: {
+    CartModel: {
+      priceWithDph?: boolean | null;
       parcelRequired?: boolean | null;
+      parcelBoxEnabled?: boolean | null;
+      parcelShopEnabled?: boolean | null;
+      alzaBoxEnabled?: boolean | null;
       mapEnabled?: boolean | null;
+      disabledByRules?: boolean | null;
+      disabledByCountry?: boolean;
       ageRequired?: boolean | null;
       codPayment?: string | null;
+      serviceCode?: string;
       disablePayments?: string[] | null;
+      disabledByProduct?: boolean;
       disableCod?: boolean | null;
       codFee?: number | null;
       cost?: number | null;
@@ -184,6 +189,7 @@ export interface components {
     ShipmentModel: {
       id?: number | null;
       packages?: components["schemas"]["PackageModel"][] | null;
+      printState?: string | null;
       /** @enum {string|null} */
       importState?: "None" | "Accepted" | "InProcess" | "Complete" | "Error" | null;
       referenceId?: string | null;
@@ -194,7 +200,6 @@ export interface components {
       serviceCode?: string | null;
       serviceName?: string | null;
       batchLabelGroup?: string | null;
-      codBankAccount?: components["schemas"]["BankAccountModel"];
       hasParcel?: boolean | null;
       orderId?: number | null;
       parcel?: components["schemas"]["ParcelAddressModel"];
@@ -222,9 +227,9 @@ export interface components {
     UpdateSyncPhasesModel: {
       maxSync?: number | null;
       phases?: (({
-        code: string | null;
-        watch: boolean | null;
-      })[]) | null;
+          code: string | null;
+          watch: boolean | null;
+        })[]) | null;
     };
     CountryModel: {
       code: string;

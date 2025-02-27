@@ -13,6 +13,18 @@
                         "type": "boolean",
                         "nullable": true
                     },
+                    "pplDisabledParcelBox": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "pplDisabledAlzaBox": {
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "pplDisabledParcelShop": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
                     "pplDisabledTransport": {
                         "type": "array",
                         "items": {
@@ -25,6 +37,18 @@
             "CategoryModel": {
                 "type": "object",
                 "properties": {
+                    "pplDisabledParcelBox": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "pplDisabledAlzaBox": {
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "pplDisabledParcelShop": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
                     "pplDisabledTransport": {
                         "type": "array",
                         "items": {
@@ -636,7 +660,23 @@
                         "type": "boolean",
                         "nullable": true
                     },
+                    "parcelBoxEnabled": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "parcelShopEnabled": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "alzaBoxEnabled": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
                     "mapEnabled": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "disabledByRules": {
                         "type": "boolean",
                         "nullable": true
                     },

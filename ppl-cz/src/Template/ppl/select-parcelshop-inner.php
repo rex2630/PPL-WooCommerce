@@ -26,11 +26,31 @@ if (isset($shipping_address) && $shipping_address) {
     $address =  join(', ', array_filter([$shipping_address->getStreet(), join(" ", array_filter([$shipping_address->getZipCode(), $shipping_address->getCity()]))]));
     $country = $shipping_address->getCountry();
 }
+$parcels = ["ParcelBox" => "1", "AlzaBox" => "2", "ParcelShop" => 3];
 
+if ($parcelBoxEnabled)
+{
+    unset($parcels["ParcelBox"]);
+}
+if ($alzaBoxEnabled)
+{
+    unset($parcels["AlzaBox"]);
+}
+if ($parcelShopEnabled) {
+    unset($parcels["ParcelShop"]);
+}
+$parcelShopRequired = 0;
+$parcelBoxRequired = 0;
 ?>
 <div class="pplcz-parcelshop-inner" <?php echo ((isset($showMap) && $showMap) ? "data-pplcz-showmap='1'" : "") ?> >
     <div class="pplcz-select-parcelshop">
-        <a href="#" class="pplcz-select-parcelshop" data-pplcz-select-parcel-shop="" <?php if (!$ageOk): ?> data-pplcz-parcelshop="1" <?php endif ?> data-address="<?php echo esc_html($address) ?>" data-country="<?php echo esc_html($country) ?>">
+        <a href="#"
+           class="pplcz-select-parcelshop"
+           data-pplcz-select-parcel-shop=""
+           data-hidden-points="<?php echo esc_html(join(',', array_keys($parcels)));?>"
+           <?php if (!$ageOk): ?> data-pplcz-parcelshop="1" <?php endif ?>
+           data-address="<?php echo esc_html($address) ?>"
+           data-country="<?php echo esc_html($country) ?>">
             <img src="<?php echo esc_url($image) ?>">
         </a>
     </div>

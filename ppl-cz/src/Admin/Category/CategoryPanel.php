@@ -41,32 +41,48 @@ class CategoryPanel {
         {
             return;
         }
-
+        $pplDisabledParcelBox = false;
+        $pplDisabledParcelShop = false;
+        $pplDisabledAlzaBox = false;
         $pplDisabledTransport = [];
+
         if (isset($_POST['pplDisabledTransport'])) {
             $pplDisabledTransport = sanitize_post(wp_unslash($_POST['pplDisabledTransport']), 'raw');
         }
         $pplDisabledTransport = wc_clean($pplDisabledTransport);
 
+        if (isset($_POST['pplDisabledParcelBox']))
+            $pplDisabledParcelBox = sanitize_post(wp_unslash($_POST['pplDisabledParcelBox']), 'raw');
+
+        if (isset($_POST['pplDisabledParcelShop']))
+            $pplDisabledParcelShop = sanitize_post(wp_unslash($_POST['pplDisabledParcelShop']), 'raw');
+
+        if (isset($_POST['pplDisabledAlzaBox']))
+            $pplDisabledAlzaBox = sanitize_post(wp_unslash($_POST['pplDisabledAlzaBox']), 'raw');
+
         $model = new CategoryModel();
+
         if (is_array($pplDisabledTransport)) {
             $model->setPplDisabledTransport($pplDisabledTransport);
         }
+
+        $model->setPplDisabledParcelBox($pplDisabledParcelBox);
+        $model->setPplDisabledParcelShop($pplDisabledParcelShop);
+        $model->setPplDisabledAlzaBox($pplDisabledAlzaBox);
+
         $category = get_term($term_id);
-        Serializer::getInstance()->denormalize($model, \WP_Term::class, null, [ "category" => $category]);
+        pplcz_denormalize($model, \WP_Term::class, [ "category" => $category]);
     }
 
     private static function renderForm($categoryModel, $asTd)
     {
         $shipments = self::get_shipping();
-        $pplcz_element_safe = $asTd ? "tr" : "div";
-
 ?>
-        <<?php echo $pplcz_element_safe ?> id="pplcz_tab"
+        <div id="pplcz_tab"
                          data-pplNonce='<?php echo esc_html(wp_create_nonce("category")) ?>'
                          data-data='<?php echo esc_html(wp_json_encode(pplcz_normalize($categoryModel))) ?>'
                          data-methods='<?php echo esc_html(wp_json_encode($shipments)) ?>'>
-        </<?php echo $pplcz_element_safe ?>>
+        </div>
 <?php
         JsTemplate::add_inline_script("pplczInitCategoryTab", "pplcz_tab");
     }
@@ -76,21 +92,17 @@ class CategoryPanel {
             $categoryModel = Serializer::getInstance()->denormalize($taxonomy, CategoryModel::class);
             if ($taxonomy === "product_cat")
             {
-                ?>
-                <div class="form-field">
-                    <label >
-                        Seznam zakázaných metod pro PPL
-                    </label>
-                </div>
-                <?php self::renderForm($categoryModel, false); ?>
-            <?php
+                echo "PPL";
+                self::renderForm($categoryModel, false);
             } else {
             ?>
             <tr class="form-field">
-            <th>
-                Seznam zakázaných metod pro PPL
-            </th>
+                <th>
+                    PPL
+                </th>
+                <td>
                 <?php self::renderForm($categoryModel, true); ?>
+                </td>
             </tr>
             <?php
             }

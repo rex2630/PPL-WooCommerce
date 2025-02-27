@@ -61,12 +61,40 @@ class CartModelNormalizer implements DenormalizerInterface, NormalizerInterface,
         elseif (\array_key_exists('parcelRequired', $data) && $data['parcelRequired'] === null) {
             $object->setParcelRequired(null);
         }
+        if (\array_key_exists('parcelBoxEnabled', $data) && $data['parcelBoxEnabled'] !== null) {
+            $object->setParcelBoxEnabled($data['parcelBoxEnabled']);
+            unset($data['parcelBoxEnabled']);
+        }
+        elseif (\array_key_exists('parcelBoxEnabled', $data) && $data['parcelBoxEnabled'] === null) {
+            $object->setParcelBoxEnabled(null);
+        }
+        if (\array_key_exists('parcelShopEnabled', $data) && $data['parcelShopEnabled'] !== null) {
+            $object->setParcelShopEnabled($data['parcelShopEnabled']);
+            unset($data['parcelShopEnabled']);
+        }
+        elseif (\array_key_exists('parcelShopEnabled', $data) && $data['parcelShopEnabled'] === null) {
+            $object->setParcelShopEnabled(null);
+        }
+        if (\array_key_exists('alzaBoxEnabled', $data) && $data['alzaBoxEnabled'] !== null) {
+            $object->setAlzaBoxEnabled($data['alzaBoxEnabled']);
+            unset($data['alzaBoxEnabled']);
+        }
+        elseif (\array_key_exists('alzaBoxEnabled', $data) && $data['alzaBoxEnabled'] === null) {
+            $object->setAlzaBoxEnabled(null);
+        }
         if (\array_key_exists('mapEnabled', $data) && $data['mapEnabled'] !== null) {
             $object->setMapEnabled($data['mapEnabled']);
             unset($data['mapEnabled']);
         }
         elseif (\array_key_exists('mapEnabled', $data) && $data['mapEnabled'] === null) {
             $object->setMapEnabled(null);
+        }
+        if (\array_key_exists('disabledByRules', $data) && $data['disabledByRules'] !== null) {
+            $object->setDisabledByRules($data['disabledByRules']);
+            unset($data['disabledByRules']);
+        }
+        elseif (\array_key_exists('disabledByRules', $data) && $data['disabledByRules'] === null) {
+            $object->setDisabledByRules(null);
         }
         if (\array_key_exists('disabledByCountry', $data)) {
             $object->setDisabledByCountry($data['disabledByCountry']);
@@ -145,8 +173,20 @@ class CartModelNormalizer implements DenormalizerInterface, NormalizerInterface,
         if ($object->isInitialized('parcelRequired') && null !== $object->getParcelRequired()) {
             $data['parcelRequired'] = $object->getParcelRequired();
         }
+        if ($object->isInitialized('parcelBoxEnabled') && null !== $object->getParcelBoxEnabled()) {
+            $data['parcelBoxEnabled'] = $object->getParcelBoxEnabled();
+        }
+        if ($object->isInitialized('parcelShopEnabled') && null !== $object->getParcelShopEnabled()) {
+            $data['parcelShopEnabled'] = $object->getParcelShopEnabled();
+        }
+        if ($object->isInitialized('alzaBoxEnabled') && null !== $object->getAlzaBoxEnabled()) {
+            $data['alzaBoxEnabled'] = $object->getAlzaBoxEnabled();
+        }
         if ($object->isInitialized('mapEnabled') && null !== $object->getMapEnabled()) {
             $data['mapEnabled'] = $object->getMapEnabled();
+        }
+        if ($object->isInitialized('disabledByRules') && null !== $object->getDisabledByRules()) {
+            $data['disabledByRules'] = $object->getDisabledByRules();
         }
         if ($object->isInitialized('disabledByCountry') && null !== $object->getDisabledByCountry()) {
             $data['disabledByCountry'] = $object->getDisabledByCountry();

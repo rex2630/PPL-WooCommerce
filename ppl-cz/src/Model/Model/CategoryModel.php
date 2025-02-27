@@ -15,9 +15,93 @@ class CategoryModel extends \ArrayObject
     /**
      * 
      *
+     * @var bool|null
+     */
+    protected $pplDisabledParcelBox;
+    /**
+     * 
+     *
+     * @var bool
+     */
+    protected $pplDisabledAlzaBox;
+    /**
+     * 
+     *
+     * @var bool|null
+     */
+    protected $pplDisabledParcelShop;
+    /**
+     * 
+     *
      * @var string[]|null
      */
     protected $pplDisabledTransport;
+    /**
+     * 
+     *
+     * @return bool|null
+     */
+    public function getPplDisabledParcelBox() : ?bool
+    {
+        return $this->pplDisabledParcelBox;
+    }
+    /**
+     * 
+     *
+     * @param bool|null $pplDisabledParcelBox
+     *
+     * @return self
+     */
+    public function setPplDisabledParcelBox(?bool $pplDisabledParcelBox) : self
+    {
+        $this->initialized['pplDisabledParcelBox'] = true;
+        $this->pplDisabledParcelBox = $pplDisabledParcelBox;
+        return $this;
+    }
+    /**
+     * 
+     *
+     * @return bool
+     */
+    public function getPplDisabledAlzaBox() : ?bool
+    {
+        return $this->pplDisabledAlzaBox;
+    }
+    /**
+     * 
+     *
+     * @param bool $pplDisabledAlzaBox
+     *
+     * @return self
+     */
+    public function setPplDisabledAlzaBox(bool $pplDisabledAlzaBox) : self
+    {
+        $this->initialized['pplDisabledAlzaBox'] = true;
+        $this->pplDisabledAlzaBox = $pplDisabledAlzaBox;
+        return $this;
+    }
+    /**
+     * 
+     *
+     * @return bool|null
+     */
+    public function getPplDisabledParcelShop() : ?bool
+    {
+        return $this->pplDisabledParcelShop;
+    }
+    /**
+     * 
+     *
+     * @param bool|null $pplDisabledParcelShop
+     *
+     * @return self
+     */
+    public function setPplDisabledParcelShop(?bool $pplDisabledParcelShop) : self
+    {
+        $this->initialized['pplDisabledParcelShop'] = true;
+        $this->pplDisabledParcelShop = $pplDisabledParcelShop;
+        return $this;
+    }
     /**
      * 
      *

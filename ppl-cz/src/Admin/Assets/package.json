@@ -6,7 +6,7 @@
     "scripts": {
         "build": "wp-scripts build",
         "start": "wp-scripts start",
-        "generate": "openapi-typescript ../../schema.json > ./src/schema.d.ts"
+        "generate": "openapi-typescript ../../schema.json > ./src/schema.ts && openapi-typescript ../../schema.json > ../MuiAdmin/src/schema.ts"
     },
     "keywords": [],
     "author": "",

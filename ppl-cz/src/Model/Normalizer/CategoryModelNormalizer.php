@@ -41,6 +41,24 @@ class CategoryModelNormalizer implements DenormalizerInterface, NormalizerInterf
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
+        if (\array_key_exists('pplDisabledParcelBox', $data) && $data['pplDisabledParcelBox'] !== null) {
+            $object->setPplDisabledParcelBox($data['pplDisabledParcelBox']);
+            unset($data['pplDisabledParcelBox']);
+        }
+        elseif (\array_key_exists('pplDisabledParcelBox', $data) && $data['pplDisabledParcelBox'] === null) {
+            $object->setPplDisabledParcelBox(null);
+        }
+        if (\array_key_exists('pplDisabledAlzaBox', $data)) {
+            $object->setPplDisabledAlzaBox($data['pplDisabledAlzaBox']);
+            unset($data['pplDisabledAlzaBox']);
+        }
+        if (\array_key_exists('pplDisabledParcelShop', $data) && $data['pplDisabledParcelShop'] !== null) {
+            $object->setPplDisabledParcelShop($data['pplDisabledParcelShop']);
+            unset($data['pplDisabledParcelShop']);
+        }
+        elseif (\array_key_exists('pplDisabledParcelShop', $data) && $data['pplDisabledParcelShop'] === null) {
+            $object->setPplDisabledParcelShop(null);
+        }
         if (\array_key_exists('pplDisabledTransport', $data) && $data['pplDisabledTransport'] !== null) {
             $values = array();
             foreach ($data['pplDisabledTransport'] as $value) {
@@ -65,6 +83,15 @@ class CategoryModelNormalizer implements DenormalizerInterface, NormalizerInterf
     public function normalize($object, $format = null, array $context = array())
     {
         $data = array();
+        if ($object->isInitialized('pplDisabledParcelBox') && null !== $object->getPplDisabledParcelBox()) {
+            $data['pplDisabledParcelBox'] = $object->getPplDisabledParcelBox();
+        }
+        if ($object->isInitialized('pplDisabledAlzaBox') && null !== $object->getPplDisabledAlzaBox()) {
+            $data['pplDisabledAlzaBox'] = $object->getPplDisabledAlzaBox();
+        }
+        if ($object->isInitialized('pplDisabledParcelShop') && null !== $object->getPplDisabledParcelShop()) {
+            $data['pplDisabledParcelShop'] = $object->getPplDisabledParcelShop();
+        }
         if ($object->isInitialized('pplDisabledTransport') && null !== $object->getPplDisabledTransport()) {
             $values = array();
             foreach ($object->getPplDisabledTransport() as $value) {

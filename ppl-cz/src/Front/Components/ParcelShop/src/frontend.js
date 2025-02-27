@@ -29,13 +29,34 @@ const isParcelRequired = (shipment) => {
 	return true;
 }
 
-const ageControl = (shipment) => {
-	const shipping_rate = shipment.shipping_rates?.find(x => x.rate_id.indexOf("pplcz_") > -1 && x.selected);
-	const ageRequired = shipping_rate?.meta_data.find(x => x.key === "ageRequired");
-	if (!parseInt(ageRequired?.value))
-		return false;
+const getHiddenPoints = (shipment) => {
 
-	return true;
+	const shipping_rate = shipment.shipping_rates?.find(x => x.rate_id.indexOf("pplcz_") > -1 && x.selected);
+	const meta_data = shipping_rate?.meta_data;
+
+	const allowedParcels = {
+		ParcelBox: true,
+		ParcelShop: true,
+		AlzaBox: true
+	};
+
+
+	if (!meta_data?.find(x => x.key === "parcelBoxEnabled" && x.value) )
+	{
+		allowedParcels.ParcelBox = false;
+	}
+
+	if (!meta_data?.find(x =>  x.key === "parcelShopEnabled" && x.value) )
+	{
+		allowedParcels.ParcelShop = false;
+	}
+
+	if (!meta_data?.find(x =>  x.key === "alzaBoxEnabled" && x.value) )
+	{
+		allowedParcels.AlzaBox = false;
+	}
+
+	return Object.keys(allowedParcels).filter(x => !allowedParcels[x]);
 }
 
 const isParcelShopSelected = (cart) => {
@@ -133,6 +154,8 @@ const Block = (props) => {
 
 	const shippingRates = cart?.shippingRates?.[0];
 
+	console.log(shippingRates);
+
 	const parcelRequired = isParcelRequired(shippingRates)
 
 	const parcelShopBoxSelected = isParcelShopSelected(cart);
@@ -152,7 +175,6 @@ const Block = (props) => {
 			onUpdateComponent.current = true;
 			return;
 		}
-
 		if (parcelRequired && !parcelShopBoxSelected && !hideComponent)
 		{
 			PplMap(savingData, {...mapSetting } );
@@ -204,19 +226,9 @@ const Block = (props) => {
 		mapSetting.country = parcelShop.country;
 	}
 
+	const hiddenPoints = getHiddenPoints(shippingRates);
 
-	if (ageControl(shippingRates)) {
-		mapSetting.parcelShop = 1;
-		if (parcelRequired) {
-			if (!parcelShop || parcelShop.accessPointType !== "ParcelShop")
-				messages.push(<li key={"ageControl"}>U jednoho nebo více produktů je požadována kontrola věku. Mapa je
-					omezená
-					pouze na výběr obchodů</li>);
-		}
-		else {
-			messages.push(<li key={"ageControl"}>V případě, že zvolíte dovoz přes službu "výdejní místa", je mapa omezena pouze na výběr obchodů, protože je u jednoho nebo více produktů požadována kontrola věku</li>);
-		}
-	}
+	mapSetting.hiddenPoints = hiddenPoints.length ? hiddenPoints.join(",") : null;
 
 	if (parcelRequired && !parcelShop)
 		messages.push(<li key={"ageControl"}>Pro dodání zboží je nutno vybrat jedno z výdejních míst</li>);
@@ -224,13 +236,10 @@ const Block = (props) => {
 	return (
 		<>
 			<div>
-				<ParcelShop  cart={cart} parcelRequired={parcelRequired}/> Výběr výdejního místa <a href="#withCard" onClick={e => {
+				<ParcelShop  cart={cart} parcelRequired={parcelRequired}/> <a href="#withCard" onClick={e => {
 				e.preventDefault();
 				 PplMap(savingData, {...mapSetting } );
-			}}>Vše</a> / <a href="#withoutCard" onClick={e => {
-				e.preventDefault();
-				PplMap(savingData,  { withCash: true, ...mapSetting });
-			}}>S možnosti platit hotově</a> {parcelShopBoxSelected ? <> / <a href={"#"} onClick={e=>{
+			}}>Výběr výdejního místa</a> {parcelShop ? <> / <a href={"#"} onClick={e=>{
 				e.preventDefault();
 				onUpdateComponent.current = false;
 				savingData(null);

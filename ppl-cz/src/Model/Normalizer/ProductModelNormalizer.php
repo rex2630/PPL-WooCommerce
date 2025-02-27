@@ -55,6 +55,24 @@ class ProductModelNormalizer implements DenormalizerInterface, NormalizerInterfa
         elseif (\array_key_exists('pplConfirmAge18', $data) && $data['pplConfirmAge18'] === null) {
             $object->setPplConfirmAge18(null);
         }
+        if (\array_key_exists('pplDisabledParcelBox', $data) && $data['pplDisabledParcelBox'] !== null) {
+            $object->setPplDisabledParcelBox($data['pplDisabledParcelBox']);
+            unset($data['pplDisabledParcelBox']);
+        }
+        elseif (\array_key_exists('pplDisabledParcelBox', $data) && $data['pplDisabledParcelBox'] === null) {
+            $object->setPplDisabledParcelBox(null);
+        }
+        if (\array_key_exists('pplDisabledAlzaBox', $data)) {
+            $object->setPplDisabledAlzaBox($data['pplDisabledAlzaBox']);
+            unset($data['pplDisabledAlzaBox']);
+        }
+        if (\array_key_exists('pplDisabledParcelShop', $data) && $data['pplDisabledParcelShop'] !== null) {
+            $object->setPplDisabledParcelShop($data['pplDisabledParcelShop']);
+            unset($data['pplDisabledParcelShop']);
+        }
+        elseif (\array_key_exists('pplDisabledParcelShop', $data) && $data['pplDisabledParcelShop'] === null) {
+            $object->setPplDisabledParcelShop(null);
+        }
         if (\array_key_exists('pplDisabledTransport', $data) && $data['pplDisabledTransport'] !== null) {
             $values = array();
             foreach ($data['pplDisabledTransport'] as $value) {
@@ -84,6 +102,15 @@ class ProductModelNormalizer implements DenormalizerInterface, NormalizerInterfa
         }
         if ($object->isInitialized('pplConfirmAge18') && null !== $object->getPplConfirmAge18()) {
             $data['pplConfirmAge18'] = $object->getPplConfirmAge18();
+        }
+        if ($object->isInitialized('pplDisabledParcelBox') && null !== $object->getPplDisabledParcelBox()) {
+            $data['pplDisabledParcelBox'] = $object->getPplDisabledParcelBox();
+        }
+        if ($object->isInitialized('pplDisabledAlzaBox') && null !== $object->getPplDisabledAlzaBox()) {
+            $data['pplDisabledAlzaBox'] = $object->getPplDisabledAlzaBox();
+        }
+        if ($object->isInitialized('pplDisabledParcelShop') && null !== $object->getPplDisabledParcelShop()) {
+            $data['pplDisabledParcelShop'] = $object->getPplDisabledParcelShop();
         }
         if ($object->isInitialized('pplDisabledTransport') && null !== $object->getPplDisabledTransport()) {
             $values = array();

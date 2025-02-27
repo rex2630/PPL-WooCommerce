@@ -194,6 +194,7 @@ function pplcz_currency($params)
     foreach ($params as $key => $value)
     {
         $params[$key]['pplcz_currency'] = get_woocommerce_currency();
+        $params[$key]['pplcz_version'] = pplcz_get_version();
     }
     return $params;
 }

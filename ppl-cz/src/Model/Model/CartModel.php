@@ -29,7 +29,31 @@ class CartModel extends \ArrayObject
      *
      * @var bool|null
      */
+    protected $parcelBoxEnabled;
+    /**
+     * 
+     *
+     * @var bool|null
+     */
+    protected $parcelShopEnabled;
+    /**
+     * 
+     *
+     * @var bool|null
+     */
+    protected $alzaBoxEnabled;
+    /**
+     * 
+     *
+     * @var bool|null
+     */
     protected $mapEnabled;
+    /**
+     * 
+     *
+     * @var bool|null
+     */
+    protected $disabledByRules;
     /**
      * 
      *
@@ -133,6 +157,72 @@ class CartModel extends \ArrayObject
      *
      * @return bool|null
      */
+    public function getParcelBoxEnabled() : ?bool
+    {
+        return $this->parcelBoxEnabled;
+    }
+    /**
+     * 
+     *
+     * @param bool|null $parcelBoxEnabled
+     *
+     * @return self
+     */
+    public function setParcelBoxEnabled(?bool $parcelBoxEnabled) : self
+    {
+        $this->initialized['parcelBoxEnabled'] = true;
+        $this->parcelBoxEnabled = $parcelBoxEnabled;
+        return $this;
+    }
+    /**
+     * 
+     *
+     * @return bool|null
+     */
+    public function getParcelShopEnabled() : ?bool
+    {
+        return $this->parcelShopEnabled;
+    }
+    /**
+     * 
+     *
+     * @param bool|null $parcelShopEnabled
+     *
+     * @return self
+     */
+    public function setParcelShopEnabled(?bool $parcelShopEnabled) : self
+    {
+        $this->initialized['parcelShopEnabled'] = true;
+        $this->parcelShopEnabled = $parcelShopEnabled;
+        return $this;
+    }
+    /**
+     * 
+     *
+     * @return bool|null
+     */
+    public function getAlzaBoxEnabled() : ?bool
+    {
+        return $this->alzaBoxEnabled;
+    }
+    /**
+     * 
+     *
+     * @param bool|null $alzaBoxEnabled
+     *
+     * @return self
+     */
+    public function setAlzaBoxEnabled(?bool $alzaBoxEnabled) : self
+    {
+        $this->initialized['alzaBoxEnabled'] = true;
+        $this->alzaBoxEnabled = $alzaBoxEnabled;
+        return $this;
+    }
+    /**
+     * 
+     *
+     * @return bool|null
+     */
     public function getMapEnabled() : ?bool
     {
         return $this->mapEnabled;
@@ -148,6 +238,28 @@ class CartModel extends \ArrayObject
     {
         $this->initialized['mapEnabled'] = true;
         $this->mapEnabled = $mapEnabled;
+        return $this;
+    }
+    /**
+     * 
+     *
+     * @return bool|null
+     */
+    public function getDisabledByRules() : ?bool
+    {
+        return $this->disabledByRules;
+    }
+    /**
+     * 
+     *
+     * @param bool|null $disabledByRules
+     *
+     * @return self
+     */
+    public function setDisabledByRules(?bool $disabledByRules) : self
+    {
+        $this->initialized['disabledByRules'] = true;
+        $this->disabledByRules = $disabledByRules;
         return $this;
     }
     /**

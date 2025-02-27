@@ -3,8 +3,7 @@ jQuery(document).on("click", "button[data-pplcz-select-parcel-shop],a[data-pplcz
 
    const address = jQuery(this).data('address');
    const country = jQuery(this).data('country')
-   const parcelshop = jQuery(this).data('parcelshop');
-
+   const hiddenPoints = jQuery(this).data('hidden-points');
    const adding = {
 
    }
@@ -12,8 +11,8 @@ jQuery(document).on("click", "button[data-pplcz-select-parcel-shop],a[data-pplcz
        adding.address = address;
    if (country)
        adding.country = country;
-   if (parcelshop == 1)
-       adding.parcelShop = parcelshop;
+   if (hiddenPoints)
+       adding.hiddenPoints = hiddenPoints;
 
    const what = jQuery(this).data("pplcz-select-parcel-shop");
 

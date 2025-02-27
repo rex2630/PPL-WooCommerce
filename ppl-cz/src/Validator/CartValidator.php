@@ -35,6 +35,23 @@ class CartValidator extends ModelValidator {
 
         $parcel = pplcz_get_cart_parceldata();
 
+        switch($parcel->getAccessPointType())
+        {
+            case 'ParcelShop':
+                if (!$data->getParcelShopEnabled())
+                    $errors->add("parcelshop-disabled-shop", "V košíku produkt, který neumožňuje vybrat obchod pro vyzvednutí zásilky");
+                break;
+            case 'ParcelBox':
+                if (!$data->getParcelBoxEnabled())
+                    $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat ParcelBox pro vyzvednutí zásilky");
+                break;
+            case 'AlzaBox':
+                if (!$data->getAlzaBoxEnabled())
+                    $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat AlzaBox pro vyzvednutí zásilky");
+                break;
+            default:
+                $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat box pro vyzvednutí zásilky");
+        }
 
         if ($data->getParcelRequired() && !$parcel) {
             $errors->add("parcelshop-missing", "Je potřeba vybrat výdejní místo pro doručení zásilky");
@@ -82,6 +99,8 @@ class CartValidator extends ModelValidator {
             $methodid = $shippingMethod->get_method_id();
             $methodid = str_replace(pplcz_create_name(""), "", $methodid);
         }
+
+        $methodid = ShipmentMethod::methodsFor($cart->get_customer()->get_shipping_country(), $methodid);
 
         if (in_array($methodid, ["SMAR", "SMAD"], true)) {
             foreach ($cart->get_cart() as $key => $val) {

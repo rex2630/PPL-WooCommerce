@@ -71,6 +71,9 @@ class Tab {
         }
 
         $model = new ProductModel();
+        $pplDisabledParcelBox = false;
+        $pplDisabledParcelShop = false;
+        $pplDisabledAlzaBox = false;
 
         $pplConfirmAge15 = false;
         $pplConfirmAge18 = false;
@@ -81,7 +84,17 @@ class Tab {
         if (isset($_POST['pplConfirmAge18']))
             $pplConfirmAge18 = sanitize_post(wp_unslash($_POST['pplConfirmAge18']), 'raw');
         if (isset($_POST['pplDisabledTransport']))
-            $pplDisabledTransport = sanitize_post(wp_unslash($_POST['pplDisabledTransport']), 'raw');
+            $pplDisabledTransport = map_deep(wp_unslash($_POST['pplDisabledTransport']), 'sanitize_text_field');
+
+        if (isset($_POST['pplDisabledParcelBox']))
+            $pplDisabledParcelBox = sanitize_post(wp_unslash($_POST['pplDisabledParcelBox']), 'raw');
+
+        if (isset($_POST['pplDisabledParcelShop']))
+            $pplDisabledParcelShop = sanitize_post(wp_unslash($_POST['pplDisabledParcelShop']), 'raw');
+
+        if (isset($_POST['pplDisabledAlzaBox']))
+            $pplDisabledAlzaBox = sanitize_post(wp_unslash($_POST['pplDisabledAlzaBox']), 'raw');
+
 
         $model->setPplConfirmAge15(!!$pplConfirmAge15);
         $model->setPplConfirmAge18(!!$pplConfirmAge18);
@@ -89,9 +102,12 @@ class Tab {
         if (is_array($pplDisabledTransport)) {
             $model->setPplDisabledTransport($pplDisabledTransport);
         }
+        $model->setPplDisabledParcelBox(!!$pplDisabledParcelBox);
+        $model->setPplDisabledParcelShop(!!$pplDisabledParcelShop);
+        $model->setPplDisabledAlzaBox($pplDisabledAlzaBox);
 
         $product = new \WC_Product($post_id);
-        Serializer::getInstance()->denormalize($model, \WC_Product::class, null, [ "product" => $product]);
+        pplcz_denormalize($model, \WC_Product::class, [ "product" => $product]);
         $product->save_meta_data();
     }
 

@@ -30,6 +30,7 @@ class Map {
             "ppl_parcelshop",
             "ppl_parcelbox",
             "ppl_address",
+            "ppl_hiddenpoints"
         ]);
     }
 
@@ -45,6 +46,7 @@ class Map {
             $vars['ppl_parcelshop'] = intval(@$vars['ppl_parcelshop'] ?: "0");
             $vars['ppl_address'] = @$vars['ppl_address'] ?: null;
             $vars['ppl_country'] = @$vars['ppl_country'] ? strtolower(@$vars['ppl_country']) : null;
+            $vars['ppl_hiddenpoints'] = @$vars['ppl_hiddenpoints'] ?: null;
         }
         return $vars;
     }
@@ -57,8 +59,7 @@ class Map {
         $withCard = $wp_query->query_vars['ppl_withCard'];
         $withCash = $wp_query->query_vars['ppl_withCash'];
         $country = $wp_query->query_vars['ppl_country'];
-        $parcelbox = $wp_query->query_vars['ppl_country'];
-        $parcelshop = $wp_query->query_vars['ppl_parcelshop'];
+        $hiddenPoints = $wp_query->query_vars['ppl_hiddenpoints'];
         $address = $wp_query->query_vars['ppl_address'];
         $data = [];
 
@@ -66,14 +67,10 @@ class Map {
             $data["data-lat"] = $lat;
             $data["data-lng"] = $lng;
         }
-        $data["data-initialfilters"] = [];
-        if (intval($parcelshop))
-            $data["data-initialfilters"][] = "ParcelShop";
-        if (intval($parcelbox))
-            $data["data-initialfilters"][] = "ParcelBox";
 
         if (intval($withCard))
             $data["data-initialfilters"][] = "CardPayment";
+
         if (intval($withCash))
             $data["data-initialfilters"][] = "ParcelShop";
 
@@ -86,6 +83,8 @@ class Map {
 
             $data["data-mode"] = "static";
         }
+        if ($hiddenPoints)
+            $data['data-hiddenpoints'] = $hiddenPoints;
 
         if ($address)
         {
@@ -117,8 +116,8 @@ class Map {
 
     public static function wp_enqueue()
     {
-        wp_enqueue_style("ppl_external_css", "https://www.ppl.cz/sources/map/main.css", [], pplcz_get_version());
-        wp_enqueue_script("ppl_external_js",  "https://www.ppl.cz/sources/map/main.js", [], pplcz_get_version(), true);
+        wp_enqueue_style("ppl_external_css", "https://www.ppl.cz/sources/map/main.css", [], pplcz_get_version()); //  updating is different from plugins, cannot be done locally
+        wp_enqueue_script("ppl_external_js",  "https://www.ppl.cz/sources/map/main.js", [], pplcz_get_version(), true); //  updating is different from plugins, cannot be done locally
 
         $path = plugins_url("/Map/ppl-external.css", __DIR__);
         wp_enqueue_style("ppl_internal_css", $path, [], pplcz_get_version());

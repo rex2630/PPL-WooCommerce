@@ -312,7 +312,7 @@ class ShipmentMethod extends \WC_Shipping_Method {
         {
             return [
                 'PRIV' => 'CONN', 'PRID'=> "COND", 'SMAR'=> 'SMEU', 'SMAD'=> 'SMED',
-                'SMEU' => "SMEU", "SMED" => "SMAD", "CONN" => "CONN", 'COND'=> "COND"
+                'SMEU' => "SMEU", "SMED" => "SMED", "CONN" => "CONN", 'COND'=> "COND"
             ][$method];
         }
     }
@@ -372,6 +372,9 @@ class ShipmentMethod extends \WC_Shipping_Method {
         if ($cartData->getDisabledByCountry())
             return;
 
+        if ($cartData->getDisabledByRules())
+            return;
+
         $price = $cartData->getCost();
 
         $priceWithDph = \WC_Tax::calc_shipping_tax($cartData->getCost(), \WC_Tax::get_shipping_tax_rates());
@@ -390,7 +393,7 @@ class ShipmentMethod extends \WC_Shipping_Method {
             'id' => $this->id,
             'label' => $this->instance_settings["title"] ?: $this->title ?: $this->method_title,
             'cost' => $price,
-            "meta_data" => pplcz_normalize($cartData) + [ 'taxes' => $priceWithDph ],
+            "meta_data" => pplcz_normalize($cartData) + [ 'pplcz_taxes' => $priceWithDph ],
             "taxes" => $priceWithDph
         ]);
     }
@@ -413,7 +416,10 @@ class ShipmentMethod extends \WC_Shipping_Method {
                  */
                 $metadata = $item->get_meta_data();
                 $item->set_cost($metadata['cost']);
-                $item->set_taxes($metadata['taxes']);
+                if (isset($metadata['taxes']))
+                    $item->set_taxes($metadata['taxes']);
+                else if (isset($metadata['pplcz_taxes']))
+                    $item->set_taxes($metadata['pplcz_taxes']);
                 $rates[$key] = $item;
             }
         }
