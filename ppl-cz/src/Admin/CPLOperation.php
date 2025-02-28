@@ -37,6 +37,7 @@ use PPLCZ\Data\ShipmentData;
 use PPLCZ\Model\Model\LabelPrintModel;
 use PPLCZ\Model\Model\WhisperAddressModel;
 use PPLCZ\Serializer;
+use WpOrg\Requests\Utility\CaseInsensitiveDictionary;
 
 require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
@@ -364,22 +365,33 @@ class CPLOperation
         }
 
         if (!$referenceId) {
-            $httpData = $shipmentApi->getShipmentBatchLabelWithHttpInfo($batchId, 100, 0, $format, $position);
-            if (!$httpData) {
-                return;
+            $response = wp_remote_get(self::BASE_URL . '/shipment/batch/' . $batchId . '/label?' . http_build_query([
+                    "limit" => 100,
+                    "offset" => 0,
+                    "pageSize" => $format,
+                    "position" => $position,
+                    "orderBy" => "ReferenceId,ShipmentNumber"
+                ], null, "&", PHP_QUERY_RFC3986), [
+                "headers" =>[
+                    "Authorization" => "Bearer " . $this->getAccessToken(),
+                ],
+            ]);
+
+            if ($response instanceof \WP_Error)
+            {
+                throw new \Exception($response->get_error_message());
             }
-            header("Content-Type: " . $httpData[2]["Content-Type"][0]);
+
+            if ($response['response']['code'] !== 200)
+            {
+                throw new \Exception($response['body']);
+            }
             /**
-             * @var \SplFileInfo $file
+             * @var CaseInsensitiveDictionary $headers
              */
-            $file = $httpData[0];
-            $path = $file->getPathname();
-
-            $filesystem = new \WP_Filesystem_Direct( true );
-            $content = $filesystem->get_contents($path);
-
-            // pdf file
-            exit($content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            $headers = $response['headers'];
+            header("Content-Type: " . $headers->offsetGet("content-type"));
+            exit($response['body']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
         else {
             // načtu si info kolem batch
@@ -429,25 +441,33 @@ class CPLOperation
             $items = $founded->getRelatedItems() ?? [];
             $max = $packageId ? 1: (count($items) + 1);
 
+            $response = wp_remote_get(self::BASE_URL . '/shipment/batch/' . $batchId . '/label?' . http_build_query([
+                    "limit" => $max,
+                    "offset" => $offset,
+                    "pageSize" => $format,
+                    "position" => $position,
+                    "orderBy" => "ReferenceId,ShipmentNumber"
+            ], null, "&", PHP_QUERY_RFC3986), [
+                "headers" =>[
+                    "Authorization" => "Bearer " . $this->getAccessToken(),
+                ],
+            ]);
 
-            $httpData = $shipmentApi->getShipmentBatchLabelWithHttpInfo($batchId, $max, $offset, $format, $position, null, null, null, "ReferenceId,ShipmentNumber");
-            if (!$httpData) {
-                return;
+            if ($response instanceof \WP_Error)
+            {
+                throw new \Exception($response->get_error_message());
             }
 
-            header("Content-Type: " . $httpData[2]["Content-Type"][0]);
-
+            if ($response['response']['code'] !== 200)
+            {
+                throw new \Exception($response['body']);
+            }
             /**
-             * @var \SplFileInfo $file
+             * @var CaseInsensitiveDictionary $headers
              */
-            $file = $httpData[0];
-            $path = $file->getPathname();
-
-            $filesystem = new \WP_Filesystem_Direct( true );
-            $content = $filesystem->get_contents($path);
-
-            // pdf file
-            exit($content); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            $headers = $response['headers'];
+            header("Content-Type: " . $headers->offsetGet("content-type"));
+            exit($response['body']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
     }
 

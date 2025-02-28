@@ -8,3 +8,7 @@
 - oprava problému s výběrem u mapy při změně země
 - oprava chování naplánovaných akcí
 - drobné opravy
+# 1.0.14
+- možnost určení výdejního místa u produktu a kategorie
+# 1.0.15
+- oprava stahování souboru v případě problému stahování souboru
