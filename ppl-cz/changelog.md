@@ -12,3 +12,5 @@
 - možnost určení výdejního místa u produktu a kategorie
 # 1.0.15
 - oprava stahování souboru v případě problému stahování souboru
+# 1.0.16
+- oprava příplatku na dobírku v případě různých měn a DPH

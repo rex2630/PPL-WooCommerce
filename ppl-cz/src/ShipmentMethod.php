@@ -378,6 +378,7 @@ class ShipmentMethod extends \WC_Shipping_Method {
         $price = $cartData->getCost();
 
         $priceWithDph = \WC_Tax::calc_shipping_tax($cartData->getCost(), \WC_Tax::get_shipping_tax_rates());
+
         if ($cartData->getPriceWithDph() && $price ) {
             $first = reset($priceWithDph);
             if ($first) {
@@ -430,27 +431,72 @@ class ShipmentMethod extends \WC_Shipping_Method {
 
     public static function recalculate_fees($cart)
     {
+
         $rate = pplcz_get_cart_shipping_method();
         if (!$rate)
             return $cart;
+
 
         /**
          * @var CartModel $metadata
          */
         $metadata = Serializer::getInstance()->denormalize(new ShipmentMethod($rate->get_instance_id() ?: $rate->get_method_id()), CartModel::class);
         if ($metadata->isInitialized('codFee') && $metadata->getCodFee()) {
-            $priceWithDph = \WC_Tax::calc_shipping_tax($metadata->getCodFee(), \WC_Tax::get_shipping_tax_rates());
-            if ($metadata->getPriceWithDph() ) {
-                $first = reset($priceWithDph);
-                if ($first) {
-                    $procento  = ($metadata->getCodFee() + $first) / $metadata->getCodFee();
-                    $metadata->setCodFee($metadata->getCodFee() / $procento);
+            $selected_rates = \WC_Tax::get_shipping_tax_rates();
+            if ($selected_rates) {
+                $default_shipping_tax_class = get_option('woocommerce_shipping_tax_class');
+
+                // seznam možných daní
+                $shipping_rates = array_merge(wp_list_pluck(\WC_Tax::get_tax_rate_classes(), "slug"),  [""]);
+                foreach ($shipping_rates as $key =>$rates)
+                {
+                    $shipping_rates[$key] = \WC_Tax::get_rates($rates) + ["slug" => $rates];
                 }
-                $priceWithDph = \WC_Tax::calc_shipping_tax($metadata->getCodFee(), \WC_Tax::get_shipping_tax_rates());
+                // vyhledání daňové sazby navázanou na dopravu
+                foreach ($shipping_rates as $specific_rate) {
+                    foreach ($specific_rate as $rateKey => $globalRate) {
+                        if ($rateKey === key($selected_rates)) {
+                            $default_shipping_tax_class = $specific_rate['slug'];
+                            break 2;
+                        }
+                    }
+                }
+
+                $priceWithDph = \WC_Tax::calc_shipping_tax($metadata->getCodFee(), $selected_rates);
+                if ($metadata->getPriceWithDph()) {
+                    $first = reset($priceWithDph);
+                    if ($first) {
+                        $procento = ($metadata->getCodFee() + $first) / $metadata->getCodFee();
+                        $metadata->setCodFee($metadata->getCodFee() / $procento);
+                    }
+                }
+
+                WC()->cart->fees_api()->add_fee(
+                    array(
+                        'name'      => "Příplatek za dobírku",
+                        'amount'    => (float)  $metadata->getCodFee(),
+                        'taxable'   => true,
+                        'tax_class' => $default_shipping_tax_class,
+                        "yay_currency_fee_converted" => true
+                    )
+                );
+
+            }
+            else {
+                WC()->cart->fees_api()->add_fee(
+                    array(
+                        'name'      => "Příplatek za dobírku",
+                        'amount'    => (float)  $metadata->getCodFee(),
+                        'taxable'   => false,
+                        'tax_class' => '',
+                        "yay_currency_fee_converted" => true
+                    )
+                );
+
             }
 
-            WC()->cart->add_fee("Příplatek za dobírku", $metadata->getCodFee(), true, $priceWithDph);
         }
+
         return $cart;
 
     }
@@ -516,7 +562,7 @@ class ShipmentMethod extends \WC_Shipping_Method {
 
     public static function hide_order_itemmeta($metas)
     {
-        return array_merge(['priceWithDph', 'disablePayments', "parcelRequired", "mapEnabled", "codFee", "codPayment", "disableCod", "ageRequired", "cost", "codFee", "serviceCode"], $metas );
+        return array_merge(['priceWithDph', 'disablePayments', "parcelRequired", "mapEnabled", "codFee", "codPayment", "disableCod", "ageRequired", "cost", "codFee", "serviceCode", "parcelBoxEnabled", "alzaBoxEnabled", "parcelShopEnabled"], $metas );
     }
 
     public static function shipping_zone_shipping_methods($methods)

@@ -33,24 +33,25 @@ class CartValidator extends ModelValidator {
          */
         $data = Serializer::getInstance()->denormalize($shippingMethod->get_meta_data(), CartModel::class);
 
-        $parcel = pplcz_get_cart_parceldata();
 
-        switch($parcel->getAccessPointType())
-        {
-            case 'ParcelShop':
-                if (!$data->getParcelShopEnabled())
-                    $errors->add("parcelshop-disabled-shop", "V košíku produkt, který neumožňuje vybrat obchod pro vyzvednutí zásilky");
-                break;
-            case 'ParcelBox':
-                if (!$data->getParcelBoxEnabled())
-                    $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat ParcelBox pro vyzvednutí zásilky");
-                break;
-            case 'AlzaBox':
-                if (!$data->getAlzaBoxEnabled())
-                    $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat AlzaBox pro vyzvednutí zásilky");
-                break;
-            default:
-                $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat box pro vyzvednutí zásilky");
+        $parcel = pplcz_get_cart_parceldata();
+        if ($parcel) {
+            switch ($parcel->getAccessPointType()) {
+                case 'ParcelShop':
+                    if (!$data->getParcelShopEnabled())
+                        $errors->add("parcelshop-disabled-shop", "V košíku produkt, který neumožňuje vybrat obchod pro vyzvednutí zásilky");
+                    break;
+                case 'ParcelBox':
+                    if (!$data->getParcelBoxEnabled())
+                        $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat ParcelBox pro vyzvednutí zásilky");
+                    break;
+                case 'AlzaBox':
+                    if (!$data->getAlzaBoxEnabled())
+                        $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat AlzaBox pro vyzvednutí zásilky");
+                    break;
+                default:
+                    $errors->add("parcelshop-disabled-box", "V košíku produkt, který neumožňuje vybrat box pro vyzvednutí zásilky");
+            }
         }
 
         if ($data->getParcelRequired() && !$parcel) {
