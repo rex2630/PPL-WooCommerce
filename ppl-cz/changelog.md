@@ -14,3 +14,5 @@
 - oprava stahování souboru v případě problému stahování souboru
 # 1.0.16
 - oprava příplatku na dobírku v případě různých měn a DPH
+# 1.0.17
+- oprava hlášky v rácmi chybějících nebo špatných údajů

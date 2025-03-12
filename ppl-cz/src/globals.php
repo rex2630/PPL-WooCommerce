@@ -206,7 +206,7 @@ function pplcz_tables ($activate = false) {
         require_once __DIR__ . '/installdb.php';
         pplcz_installdb();
 
-        add_action("admin_init", function() use ($activate) {
+        add_action("admin_init", function () use ($activate) {
             as_unschedule_action("woocommerceppl_refresh_shipments_cron");
             as_unschedule_action("woocommerceppl_refresh_setting_cron");
             as_unschedule_action(pplcz_create_name("refresh_shipments_cron"));

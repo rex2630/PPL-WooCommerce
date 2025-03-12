@@ -238,7 +238,7 @@ class SettingV1RestController extends  PPLRestController
         if (!$accessToken) {
             $response = new \WP_REST_Response();
             $response->set_status(400);
-            $response->set_data("Nelze se pomocí zadaných údajů přihlásit");
+            $response->set_data("PPL Plugin nebude fungovat, protože přihlašovací údaje nejsou správně nastaveny! Ujistěte se, že jsou zadány správně. Pokud je nemáte, prosím kontaktujte ithelp@ppl.cz");
             return $response;
         }
 

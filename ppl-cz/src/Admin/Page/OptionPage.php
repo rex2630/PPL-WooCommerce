@@ -57,7 +57,10 @@ class OptionPage {
         if ($validated == -1) {
             ?>
             <div class="notice notice-error is-dismissible">
-                <p>Nejsou správně nastaveny <a href='<?php echo esc_html($url)?>'>přihlašovací údaje</a> pro PPL Plugin!</p>
+                <p>
+                    PPL Plugin nemůže fungovat, protože <a href='<?php echo esc_html($url)?>'>přihlašovací údaje</a> nejsou správně nastaveny! Ujistěte se, že jsou zadány správně.<br/>
+                    Pokud přístupové údaje nemáte, prosím kontaktujte ithelp@ppl.cz
+                </p>
             </div>
             <?php
         }
