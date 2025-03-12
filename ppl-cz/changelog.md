@@ -16,3 +16,5 @@
 - oprava příplatku na dobírku v případě různých měn a DPH
 # 1.0.17
 - oprava hlášky v rácmi chybějících nebo špatných údajů
+# 1.0.18
+- upravení chování košíku a pokladny v react komponentách

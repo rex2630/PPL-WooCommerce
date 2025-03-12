@@ -72,14 +72,14 @@ const ParcelShop = (props) => {
 		<div>
 			{parcelShop ?
 				<>
-			<strong>Výdejní místo</strong><br/>
-			<span>{parcelShop.name}</span>,&nbsp;
-			<span>{parcelShop.street}</span>,&nbsp;
-			<span>{parcelShop.zipCode}</span>,&nbsp;
-			<span>{parcelShop.city}</span> <a  href={"#"} onClick={e=>{
-			e.preventDefault();
-			PplMap(()=>{}, { lat: parcelShop?.gps.latitude, lng: parcelShop?.gps.longitude});
-		}}>[na mapě]</a></> : (parcelRequired ? <>Vyberte výdejní místo pro doručení zásilky</> : <>Zboží bude dodáno na doručovací adresu</>)}
+					<strong>Výdejní místo</strong><br/>
+					<span>{parcelShop.name}</span>,&nbsp;
+					<span>{parcelShop.street}</span>,&nbsp;
+					<span>{parcelShop.zipCode}</span>,&nbsp;
+					<span>{parcelShop.city}</span> <a  href={"#"} onClick={e=>{
+					e.preventDefault();
+					PplMap(()=>{}, { lat: parcelShop?.gps.latitude, lng: parcelShop?.gps.longitude});
+				}}>[na mapě]</a></> : (parcelRequired ? <>Vyberte výdejní místo pro doručení zásilky</> : <>Zboží bude dodáno na doručovací adresu</>)}
 		</div>
 	)
 }
@@ -238,7 +238,7 @@ const Block = (props) => {
 			<div>
 				<ParcelShop  cart={cart} parcelRequired={parcelRequired}/> <a href="#withCard" onClick={e => {
 				e.preventDefault();
-				 PplMap(savingData, {...mapSetting } );
+				PplMap(savingData, {...mapSetting } );
 			}}>Výběr výdejního místa</a> {parcelShop ? <> / <a href={"#"} onClick={e=>{
 				e.preventDefault();
 				onUpdateComponent.current = false;
@@ -256,4 +256,3 @@ const options = {
 
 
 registerCheckoutBlock(options);
-

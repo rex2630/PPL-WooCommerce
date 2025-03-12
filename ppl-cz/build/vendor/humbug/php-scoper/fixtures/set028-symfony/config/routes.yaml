@@ -1,3 +1,0 @@
-#index:
-#    path: /
-#    controller: PPLCZVendor\App\Controller\DefaultController::index
