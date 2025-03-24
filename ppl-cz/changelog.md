@@ -18,3 +18,6 @@
 - oprava hlášky v rácmi chybějících nebo špatných údajů
 # 1.0.18
 - upravení chování košíku a pokladny v react komponentách
+# 1.0.19
+- v případě, že je doprava zdarma, je vypsáno "zdarma" u ppl dopravy
+- změna názvu ident. údajů pro napojení na ppl.cz api

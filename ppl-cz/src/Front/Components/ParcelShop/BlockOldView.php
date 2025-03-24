@@ -106,13 +106,13 @@ class BlockOldView
              * @var CartModel $metadata
              */
             $img = pplcz_asset_icon("small_logo.png");
-            $parcelRequired = $metadata->getParcelRequired();
             ob_start();
 
             // label is content from woocommerce with html, where i dont want change
             wc_get_template("ppl/method-name.php", [
                 "img" => $img,
-                "pplcz_label_safe" => $label
+                "pplcz_label_safe" => $label,
+                "free_shipping" => floatval($method->get_cost()) == 0
             ]);
             return ob_get_clean();
 

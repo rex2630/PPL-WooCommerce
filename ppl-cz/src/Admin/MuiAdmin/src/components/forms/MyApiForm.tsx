@@ -115,7 +115,7 @@ const MyApi = () => {
               </Alert></Box> : null}
               <Grid container alignItems={"center"}>
                 <Grid item xs={4} display={"flex"} alignContent={"center"}>
-                  <FormLabel>CPL Api Key</FormLabel>
+                  <FormLabel>Client id</FormLabel>
                 </Grid>
                 <Grid item xs={8}>
                   <Controller
@@ -133,7 +133,7 @@ const MyApi = () => {
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <FormLabel>CPL Api Secret</FormLabel>
+                  <FormLabel>Client secret</FormLabel>
                 </Grid>
                 <Grid item xs={8}>
                   <Controller
