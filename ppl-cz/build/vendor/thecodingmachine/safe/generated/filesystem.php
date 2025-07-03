@@ -220,7 +220,7 @@ function fflush($handle) : void
  * @throws FilesystemException
  *
  */
-function file_get_contents(string $filename, bool $use_include_path = \false, $context = null, int $offset = 0, int $maxlen = null) : string
+function file_get_contents(string $filename, bool $use_include_path = \false, $context = null, int $offset = 0, ?int $maxlen = null) : string
 {
     \error_clear_last();
     if ($maxlen !== null) {
@@ -877,7 +877,7 @@ function ftruncate($handle, int $size) : void
  * @throws FilesystemException
  *
  */
-function fwrite($handle, string $string, int $length = null) : int
+function fwrite($handle, string $string, ?int $length = null) : int
 {
     \error_clear_last();
     if ($length !== null) {
@@ -1369,7 +1369,7 @@ function tmpfile()
  * @throws FilesystemException
  *
  */
-function touch(string $filename, int $time = null, int $atime = null) : void
+function touch(string $filename, ?int $time = null, ?int $atime = null) : void
 {
     \error_clear_last();
     if ($atime !== null) {

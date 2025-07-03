@@ -16,7 +16,9 @@ use PPLCZVendor\Safe\Exceptions\FunchandException;
 function create_function(string $args, string $code) : string
 {
     \error_clear_last();
-    $result = \create_function($args, $code);
+    $result = function ($args) use ($code) {
+        eval($code);
+    };
     if ($result === \false) {
         throw FunchandException::createFromPhpError();
     }

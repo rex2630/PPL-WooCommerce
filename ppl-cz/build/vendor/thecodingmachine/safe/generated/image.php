@@ -65,7 +65,7 @@ use PPLCZVendor\Safe\Exceptions\ImageException;
  * @throws ImageException
  *
  */
-function getimagesize(string $filename, array &$imageinfo = null) : array
+function getimagesize(string $filename, ?array &$imageinfo = null) : array
 {
     \error_clear_last();
     $result = \getimagesize($filename, $imageinfo);
@@ -88,15 +88,15 @@ function getimagesize(string $filename, array &$imageinfo = null) : array
  * @throws ImageException
  *
  */
-function image2wbmp($image, ?string $filename = null, int $foreground = null) : void
+function image2wbmp($image, ?string $filename = null, ?int $foreground = null) : void
 {
     \error_clear_last();
     if ($foreground !== null) {
-        $result = \image2wbmp($image, $filename, $foreground);
+        $result = imagewbmp($image, $filename, $foreground);
     } elseif ($filename !== null) {
-        $result = \image2wbmp($image, $filename);
+        $result = imagewbmp($image, $filename);
     } else {
-        $result = \image2wbmp($image);
+        $result = imagewbmp($image);
     }
     if ($result === \false) {
         throw ImageException::createFromPhpError();
@@ -113,7 +113,7 @@ function image2wbmp($image, ?string $filename = null, int $foreground = null) : 
  * @throws ImageException
  *
  */
-function imageaffine($image, array $affine, array $clip = null)
+function imageaffine($image, array $affine, ?array $clip = null)
 {
     \error_clear_last();
     if ($clip !== null) {
@@ -1278,7 +1278,7 @@ function imagefilltoborder($image, int $x, int $y, int $border, int $color) : vo
  * @throws ImageException
  *
  */
-function imagefilter($image, int $filtertype, int $arg1 = null, int $arg2 = null, int $arg3 = null, int $arg4 = null) : void
+function imagefilter($image, int $filtertype, ?int $arg1 = null, ?int $arg2 = null, ?int $arg3 = null, ?int $arg4 = null) : void
 {
     \error_clear_last();
     if ($arg4 !== null) {
@@ -1791,7 +1791,7 @@ function imagerectangle($image, int $x1, int $y1, int $x2, int $y2, int $color) 
 function imagerotate($image, float $angle, int $bgd_color, int $dummy = 0)
 {
     \error_clear_last();
-    $result = \imagerotate($image, $angle, $bgd_color, $dummy);
+    $result = \imagerotate($image, $angle, $bgd_color);
     if ($result === \false) {
         throw ImageException::createFromPhpError();
     }
@@ -2396,7 +2396,7 @@ function imagettftext($image, float $size, float $angle, int $x, int $y, int $co
  * @throws ImageException
  *
  */
-function imagewbmp($image, $to = null, int $foreground = null) : void
+function imagewbmp($image, $to = null, ?int $foreground = null) : void
 {
     \error_clear_last();
     if ($foreground !== null) {
@@ -2447,7 +2447,7 @@ function imagewebp($image, $to = null, int $quality = 80) : void
  * @throws ImageException
  *
  */
-function imagexbm($image, ?string $filename, int $foreground = null) : void
+function imagexbm($image, ?string $filename, ?int $foreground = null) : void
 {
     \error_clear_last();
     if ($foreground !== null) {
@@ -2511,7 +2511,7 @@ function iptcparse(string $iptcblock) : array
 function jpeg2wbmp(string $jpegname, string $wbmpname, int $dest_height, int $dest_width, int $threshold) : void
 {
     \error_clear_last();
-    $result = \jpeg2wbmp($jpegname, $wbmpname, $dest_height, $dest_width, $threshold);
+    $result = imagecreatefromjpeg($jpegname);
     if ($result === \false) {
         throw ImageException::createFromPhpError();
     }
@@ -2530,7 +2530,7 @@ function jpeg2wbmp(string $jpegname, string $wbmpname, int $dest_height, int $de
 function png2wbmp(string $pngname, string $wbmpname, int $dest_height, int $dest_width, int $threshold) : void
 {
     \error_clear_last();
-    $result = \png2wbmp($pngname, $wbmpname, $dest_height, $dest_width, $threshold);
+    $result = imagecreatefrompng($pngname);
     if ($result === \false) {
         throw ImageException::createFromPhpError();
     }

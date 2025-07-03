@@ -112,7 +112,7 @@ function deflate_add($context, string $data, int $flush_mode = \ZLIB_SYNC_FLUSH)
  * @throws ZlibException
  *
  */
-function deflate_init(int $encoding, array $options = null)
+function deflate_init(int $encoding, ?array $options = null)
 {
     \error_clear_last();
     $result = \deflate_init($encoding, $options);
@@ -174,7 +174,7 @@ function gzcompress(string $data, int $level = -1, int $encoding = \ZLIB_ENCODIN
  * @throws ZlibException
  *
  */
-function gzdecode(string $data, int $length = null) : string
+function gzdecode(string $data, ?int $length = null) : string
 {
     \error_clear_last();
     if ($length !== null) {
@@ -261,7 +261,7 @@ function gzencode(string $data, int $level = -1, int $encoding_mode = \FORCE_GZI
  * @throws ZlibException
  *
  */
-function gzgets($zp, int $length = null) : string
+function gzgets($zp, ?int $length = null) : string
 {
     \error_clear_last();
     if ($length !== null) {
@@ -288,7 +288,7 @@ function gzgets($zp, int $length = null) : string
  * @throws ZlibException
  *
  */
-function gzgetss($zp, int $length, string $allowable_tags = null) : string
+function gzgetss($zp, int $length, ?string $allowable_tags = null) : string
 {
     \error_clear_last();
     if ($allowable_tags !== null) {
@@ -517,7 +517,7 @@ function inflate_add($context, string $encoded_data, int $flush_mode = \ZLIB_SYN
  * @throws ZlibException
  *
  */
-function inflate_init(int $encoding, array $options = null)
+function inflate_init(int $encoding, ?array $options = null)
 {
     \error_clear_last();
     $result = \inflate_init($encoding, $options);
@@ -559,7 +559,7 @@ function readgzfile(string $filename, int $use_include_path = 0) : int
  * @throws ZlibException
  *
  */
-function zlib_decode(string $data, int $max_decoded_len = null) : string
+function zlib_decode(string $data, ?int $max_decoded_len = null) : string
 {
     \error_clear_last();
     if ($max_decoded_len !== null) {

@@ -729,7 +729,7 @@ function ps_fill($psdoc) : void
  * @throws PsException
  *
  */
-function ps_get_parameter($psdoc, string $name, float $modifier = null) : string
+function ps_get_parameter($psdoc, string $name, ?float $modifier = null) : string
 {
     \error_clear_last();
     if ($modifier !== null) {
@@ -864,7 +864,7 @@ function ps_new()
  * @throws PsException
  *
  */
-function ps_open_file($psdoc, string $filename = null) : void
+function ps_open_file($psdoc, ?string $filename = null) : void
 {
     \error_clear_last();
     if ($filename !== null) {

@@ -112,7 +112,7 @@ function com_load_typelib(string $typelib_name, bool $case_sensitive = \true) : 
  * @throws ComException
  *
  */
-function com_print_typeinfo(object $comobject, string $dispinterface = null, bool $wantsink = \false) : void
+function com_print_typeinfo(object $comobject, ?string $dispinterface = null, bool $wantsink = \false) : void
 {
     \error_clear_last();
     $result = \com_print_typeinfo($comobject, $dispinterface, $wantsink);

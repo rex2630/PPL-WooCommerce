@@ -123,7 +123,7 @@ function pg_close($connection = null) : void
  * @throws PgsqlException
  *
  */
-function pg_connect(string $connection_string, int $connect_type = null)
+function pg_connect(string $connection_string, ?int $connect_type = null)
 {
     \error_clear_last();
     if ($connect_type !== null) {
@@ -200,7 +200,7 @@ function pg_convert($connection, string $table_name, array $assoc_array, int $op
  * @throws PgsqlException
  *
  */
-function pg_copy_from($connection, string $table_name, array $rows, string $delimiter = null, string $null_as = null) : void
+function pg_copy_from($connection, string $table_name, array $rows, ?string $delimiter = null, ?string $null_as = null) : void
 {
     \error_clear_last();
     if ($null_as !== null) {
@@ -230,7 +230,7 @@ function pg_copy_from($connection, string $table_name, array $rows, string $deli
  * @throws PgsqlException
  *
  */
-function pg_copy_to($connection, string $table_name, string $delimiter = null, string $null_as = null) : array
+function pg_copy_to($connection, string $table_name, ?string $delimiter = null, ?string $null_as = null) : array
 {
     \error_clear_last();
     if ($null_as !== null) {
@@ -380,7 +380,7 @@ function pg_end_copy($connection = null) : void
  * @throws PgsqlException
  *
  */
-function pg_execute($connection = null, string $stmtname = null, array $params = null)
+function pg_execute($connection = null, ?string $stmtname = null, ?array $params = null)
 {
     \error_clear_last();
     if ($params !== null) {
@@ -732,7 +732,7 @@ function pg_lo_close($large_object) : void
  * @throws PgsqlException
  *
  */
-function pg_lo_export($connection = null, int $oid = null, string $pathname = null) : void
+function pg_lo_export($connection = null, ?int $oid = null, ?string $pathname = null) : void
 {
     \error_clear_last();
     if ($pathname !== null) {
@@ -771,7 +771,7 @@ function pg_lo_export($connection = null, int $oid = null, string $pathname = nu
  * @throws PgsqlException
  *
  */
-function pg_lo_import($connection = null, string $pathname = null, $object_id = null) : int
+function pg_lo_import($connection = null, ?string $pathname = null, $object_id = null) : int
 {
     \error_clear_last();
     if ($object_id !== null) {
@@ -946,7 +946,7 @@ function pg_lo_unlink($connection, int $oid) : void
  * @throws PgsqlException
  *
  */
-function pg_lo_write($large_object, string $data, int $len = null) : int
+function pg_lo_write($large_object, string $data, ?int $len = null) : int
 {
     \error_clear_last();
     if ($len !== null) {
@@ -1044,7 +1044,7 @@ function pg_options($connection = null) : string
  * @throws PgsqlException
  *
  */
-function pg_parameter_status($connection = null, string $param_name = null) : string
+function pg_parameter_status($connection = null, ?string $param_name = null) : string
 {
     \error_clear_last();
     if ($param_name !== null) {
@@ -1103,7 +1103,7 @@ function pg_parameter_status($connection = null, string $param_name = null) : st
  * @throws PgsqlException
  *
  */
-function pg_pconnect(string $connection_string, int $connect_type = null)
+function pg_pconnect(string $connection_string, ?int $connect_type = null)
 {
     \error_clear_last();
     if ($connect_type !== null) {
@@ -1201,7 +1201,7 @@ function pg_port($connection = null) : int
  * @throws PgsqlException
  *
  */
-function pg_prepare($connection = null, string $stmtname = null, string $query = null)
+function pg_prepare($connection = null, ?string $stmtname = null, ?string $query = null)
 {
     \error_clear_last();
     if ($query !== null) {
@@ -1240,7 +1240,7 @@ function pg_prepare($connection = null, string $stmtname = null, string $query =
  * @throws PgsqlException
  *
  */
-function pg_put_line($connection = null, string $data = null) : void
+function pg_put_line($connection = null, ?string $data = null) : void
 {
     \error_clear_last();
     if ($data !== null) {
@@ -1304,7 +1304,7 @@ function pg_put_line($connection = null, string $data = null) : void
  * @throws PgsqlException
  *
  */
-function pg_query_params($connection = null, string $query = null, array $params = null)
+function pg_query_params($connection = null, ?string $query = null, ?array $params = null)
 {
     \error_clear_last();
     if ($params !== null) {
@@ -1360,7 +1360,7 @@ function pg_query_params($connection = null, string $query = null, array $params
  * @throws PgsqlException
  *
  */
-function pg_query($connection = null, string $query = null)
+function pg_query($connection = null, ?string $query = null)
 {
     \error_clear_last();
     if ($query !== null) {

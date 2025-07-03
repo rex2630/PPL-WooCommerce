@@ -412,7 +412,7 @@ function yaz_search($id, string $type, string $query) : void
  * @throws YazException
  *
  */
-function yaz_wait(array &$options = null)
+function yaz_wait(?array &$options = null)
 {
     \error_clear_last();
     $result = \PPLCZVendor\yaz_wait($options);

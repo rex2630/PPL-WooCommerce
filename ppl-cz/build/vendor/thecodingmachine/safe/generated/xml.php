@@ -21,7 +21,7 @@ use PPLCZVendor\Safe\Exceptions\XmlException;
  * @throws XmlException
  *
  */
-function xml_parser_create_ns(string $encoding = null, string $separator = ":")
+function xml_parser_create_ns(?string $encoding = null, string $separator = ":")
 {
     \error_clear_last();
     if ($separator !== ":") {
@@ -56,7 +56,7 @@ function xml_parser_create_ns(string $encoding = null, string $separator = ":")
  * @throws XmlException
  *
  */
-function xml_parser_create(string $encoding = null)
+function xml_parser_create(?string $encoding = null)
 {
     \error_clear_last();
     if ($encoding !== null) {

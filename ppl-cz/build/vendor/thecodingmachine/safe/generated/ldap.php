@@ -14,7 +14,7 @@ use PPLCZVendor\Safe\Exceptions\LdapException;
  * @throws LdapException
  *
  */
-function ldap_add_ext($link_identifier, string $dn, array $entry, array $serverctrls = null)
+function ldap_add_ext($link_identifier, string $dn, array $entry, ?array $serverctrls = null)
 {
     \error_clear_last();
     $result = \ldap_add_ext($link_identifier, $dn, $entry, $serverctrls);
@@ -42,7 +42,7 @@ function ldap_add_ext($link_identifier, string $dn, array $entry, array $serverc
  * @throws LdapException
  *
  */
-function ldap_add($link_identifier, string $dn, array $entry, array $serverctrls = null) : void
+function ldap_add($link_identifier, string $dn, array $entry, ?array $serverctrls = null) : void
 {
     \error_clear_last();
     $result = \ldap_add($link_identifier, $dn, $entry, $serverctrls);
@@ -61,7 +61,7 @@ function ldap_add($link_identifier, string $dn, array $entry, array $serverctrls
  * @throws LdapException
  *
  */
-function ldap_bind_ext($link_identifier, ?string $bind_rdn = null, ?string $bind_password = null, array $serverctrls = null)
+function ldap_bind_ext($link_identifier, ?string $bind_rdn = null, ?string $bind_password = null, ?array $serverctrls = null)
 {
     \error_clear_last();
     $result = \ldap_bind_ext($link_identifier, $bind_rdn, $bind_password, $serverctrls);
@@ -155,7 +155,7 @@ function ldap_count_entries($link_identifier, $result_identifier) : int
  * @throws LdapException
  *
  */
-function ldap_delete_ext($link_identifier, string $dn, array $serverctrls = null)
+function ldap_delete_ext($link_identifier, string $dn, ?array $serverctrls = null)
 {
     \error_clear_last();
     $result = \ldap_delete_ext($link_identifier, $dn, $serverctrls);
@@ -173,7 +173,7 @@ function ldap_delete_ext($link_identifier, string $dn, array $serverctrls = null
  * @throws LdapException
  *
  */
-function ldap_delete($link_identifier, string $dn, array $serverctrls = null) : void
+function ldap_delete($link_identifier, string $dn, ?array $serverctrls = null) : void
 {
     \error_clear_last();
     $result = \ldap_delete($link_identifier, $dn, $serverctrls);
@@ -196,7 +196,7 @@ function ldap_delete($link_identifier, string $dn, array $serverctrls = null) : 
  * @throws LdapException
  *
  */
-function ldap_exop_passwd($link, string $user = "", string $oldpw = "", string $newpw = "", array &$serverctrls = null)
+function ldap_exop_passwd($link, string $user = "", string $oldpw = "", string $newpw = "", ?array &$serverctrls = null)
 {
     \error_clear_last();
     $result = \ldap_exop_passwd($link, $user, $oldpw, $newpw, $serverctrls);
@@ -240,7 +240,7 @@ function ldap_exop_whoami($link) : string
  * @throws LdapException
  *
  */
-function ldap_exop($link, string $reqoid, string $reqdata = null, ?array $serverctrls = null, ?string &$retdata = null, ?string &$retoid = null)
+function ldap_exop($link, string $reqoid, ?string $reqdata = null, ?array $serverctrls = null, ?string &$retdata = null, ?string &$retoid = null)
 {
     \error_clear_last();
     $result = \ldap_exop($link, $reqoid, $reqdata, $serverctrls, $retdata, $retoid);
@@ -753,7 +753,7 @@ function ldap_get_values($link_identifier, $result_entry_identifier, string $att
  * @throws LdapException
  *
  */
-function ldap_list($link_identifier, string $base_dn, string $filter, array $attributes = null, int $attrsonly = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = \LDAP_DEREF_NEVER, array $serverctrls = null)
+function ldap_list($link_identifier, string $base_dn, string $filter, ?array $attributes = null, int $attrsonly = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = \LDAP_DEREF_NEVER, ?array $serverctrls = null)
 {
     \error_clear_last();
     if ($serverctrls !== null) {
@@ -787,7 +787,7 @@ function ldap_list($link_identifier, string $base_dn, string $filter, array $att
  * @throws LdapException
  *
  */
-function ldap_mod_add_ext($link_identifier, string $dn, array $entry, array $serverctrls = null)
+function ldap_mod_add_ext($link_identifier, string $dn, array $entry, ?array $serverctrls = null)
 {
     \error_clear_last();
     $result = \ldap_mod_add_ext($link_identifier, $dn, $entry, $serverctrls);
@@ -807,7 +807,7 @@ function ldap_mod_add_ext($link_identifier, string $dn, array $entry, array $ser
  * @throws LdapException
  *
  */
-function ldap_mod_add($link_identifier, string $dn, array $entry, array $serverctrls = null) : void
+function ldap_mod_add($link_identifier, string $dn, array $entry, ?array $serverctrls = null) : void
 {
     \error_clear_last();
     $result = \ldap_mod_add($link_identifier, $dn, $entry, $serverctrls);
@@ -826,7 +826,7 @@ function ldap_mod_add($link_identifier, string $dn, array $entry, array $serverc
  * @throws LdapException
  *
  */
-function ldap_mod_del_ext($link_identifier, string $dn, array $entry, array $serverctrls = null)
+function ldap_mod_del_ext($link_identifier, string $dn, array $entry, ?array $serverctrls = null)
 {
     \error_clear_last();
     $result = \ldap_mod_del_ext($link_identifier, $dn, $entry, $serverctrls);
@@ -847,7 +847,7 @@ function ldap_mod_del_ext($link_identifier, string $dn, array $entry, array $ser
  * @throws LdapException
  *
  */
-function ldap_mod_del($link_identifier, string $dn, array $entry, array $serverctrls = null) : void
+function ldap_mod_del($link_identifier, string $dn, array $entry, ?array $serverctrls = null) : void
 {
     \error_clear_last();
     $result = \ldap_mod_del($link_identifier, $dn, $entry, $serverctrls);
@@ -866,7 +866,7 @@ function ldap_mod_del($link_identifier, string $dn, array $entry, array $serverc
  * @throws LdapException
  *
  */
-function ldap_mod_replace_ext($link_identifier, string $dn, array $entry, array $serverctrls = null)
+function ldap_mod_replace_ext($link_identifier, string $dn, array $entry, ?array $serverctrls = null)
 {
     \error_clear_last();
     $result = \ldap_mod_replace_ext($link_identifier, $dn, $entry, $serverctrls);
@@ -886,7 +886,7 @@ function ldap_mod_replace_ext($link_identifier, string $dn, array $entry, array 
  * @throws LdapException
  *
  */
-function ldap_mod_replace($link_identifier, string $dn, array $entry, array $serverctrls = null) : void
+function ldap_mod_replace($link_identifier, string $dn, array $entry, ?array $serverctrls = null) : void
 {
     \error_clear_last();
     $result = \ldap_mod_replace($link_identifier, $dn, $entry, $serverctrls);
@@ -979,7 +979,7 @@ function ldap_mod_replace($link_identifier, string $dn, array $entry, array $ser
  * @throws LdapException
  *
  */
-function ldap_modify_batch($link_identifier, string $dn, array $entry, array $serverctrls = null) : void
+function ldap_modify_batch($link_identifier, string $dn, array $entry, ?array $serverctrls = null) : void
 {
     \error_clear_last();
     $result = \ldap_modify_batch($link_identifier, $dn, $entry, $serverctrls);
@@ -1126,7 +1126,7 @@ function ldap_parse_result($link, $result, ?int &$errcode, ?string &$matcheddn =
  * @throws LdapException
  *
  */
-function ldap_read($link_identifier, string $base_dn, string $filter, array $attributes = null, int $attrsonly = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = \LDAP_DEREF_NEVER, array $serverctrls = null)
+function ldap_read($link_identifier, string $base_dn, string $filter, ?array $attributes = null, int $attrsonly = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = \LDAP_DEREF_NEVER, ?array $serverctrls = null)
 {
     \error_clear_last();
     if ($serverctrls !== null) {
@@ -1162,7 +1162,7 @@ function ldap_read($link_identifier, string $base_dn, string $filter, array $att
  * @throws LdapException
  *
  */
-function ldap_rename_ext($link_identifier, string $dn, string $newrdn, string $newparent, bool $deleteoldrdn, array $serverctrls = null)
+function ldap_rename_ext($link_identifier, string $dn, string $newrdn, string $newparent, bool $deleteoldrdn, ?array $serverctrls = null)
 {
     \error_clear_last();
     $result = \ldap_rename_ext($link_identifier, $dn, $newrdn, $newparent, $deleteoldrdn, $serverctrls);
@@ -1184,7 +1184,7 @@ function ldap_rename_ext($link_identifier, string $dn, string $newrdn, string $n
  * @throws LdapException
  *
  */
-function ldap_rename($link_identifier, string $dn, string $newrdn, string $newparent, bool $deleteoldrdn, array $serverctrls = null) : void
+function ldap_rename($link_identifier, string $dn, string $newrdn, string $newparent, bool $deleteoldrdn, ?array $serverctrls = null) : void
 {
     \error_clear_last();
     $result = \ldap_rename($link_identifier, $dn, $newrdn, $newparent, $deleteoldrdn, $serverctrls);
@@ -1206,7 +1206,7 @@ function ldap_rename($link_identifier, string $dn, string $newrdn, string $newpa
  * @throws LdapException
  *
  */
-function ldap_sasl_bind($link, string $binddn = null, string $password = null, string $sasl_mech = null, string $sasl_realm = null, string $sasl_authc_id = null, string $sasl_authz_id = null, string $props = null) : void
+function ldap_sasl_bind($link, ?string $binddn = null, ?string $password = null, ?string $sasl_mech = null, ?string $sasl_realm = null, ?string $sasl_authc_id = null, ?string $sasl_authz_id = null, ?string $props = null) : void
 {
     \error_clear_last();
     $result = \ldap_sasl_bind($link, $binddn, $password, $sasl_mech, $sasl_realm, $sasl_authc_id, $sasl_authz_id, $props);
@@ -1300,7 +1300,7 @@ function ldap_sasl_bind($link, string $binddn = null, string $password = null, s
  * @throws LdapException
  *
  */
-function ldap_search($link_identifier, string $base_dn, string $filter, array $attributes = null, int $attrsonly = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = \LDAP_DEREF_NEVER, array $serverctrls = null)
+function ldap_search($link_identifier, string $base_dn, string $filter, ?array $attributes = null, int $attrsonly = 0, int $sizelimit = -1, int $timelimit = -1, int $deref = \LDAP_DEREF_NEVER, ?array $serverctrls = null)
 {
     \error_clear_last();
     if ($serverctrls !== null) {

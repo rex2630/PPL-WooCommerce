@@ -78,7 +78,7 @@ function stream_copy_to_stream($source, $dest, int $maxlength = -1, int $offset 
  * @throws StreamException
  *
  */
-function stream_filter_append($stream, string $filtername, int $read_write = null, $params = null)
+function stream_filter_append($stream, string $filtername, ?int $read_write = null, $params = null)
 {
     \error_clear_last();
     if ($params !== null) {
@@ -125,7 +125,7 @@ function stream_filter_append($stream, string $filtername, int $read_write = nul
  * @throws StreamException
  *
  */
-function stream_filter_prepend($stream, string $filtername, int $read_write = null, $params = null)
+function stream_filter_prepend($stream, string $filtername, ?int $read_write = null, $params = null)
 {
     \error_clear_last();
     if ($params !== null) {
@@ -308,7 +308,7 @@ function stream_set_timeout($stream, int $seconds, int $microseconds = 0) : void
  * @throws StreamException
  *
  */
-function stream_socket_accept($server_socket, float $timeout = null, ?string &$peername = null)
+function stream_socket_accept($server_socket, ?float $timeout = null, ?string &$peername = null)
 {
     \error_clear_last();
     if ($peername !== null) {
@@ -372,7 +372,7 @@ function stream_socket_accept($server_socket, float $timeout = null, ?string &$p
  * @throws StreamException
  *
  */
-function stream_socket_client(string $remote_socket, int &$errno = null, string &$errstr = null, float $timeout = null, int $flags = \STREAM_CLIENT_CONNECT, $context = null)
+function stream_socket_client(string $remote_socket, ?int &$errno = null, ?string &$errstr = null, ?float $timeout = null, int $flags = \STREAM_CLIENT_CONNECT, $context = null)
 {
     \error_clear_last();
     if ($context !== null) {
@@ -463,7 +463,7 @@ function stream_socket_pair(int $domain, int $type, int $protocol) : iterable
  * @throws StreamException
  *
  */
-function stream_socket_server(string $local_socket, int &$errno = null, string &$errstr = null, int $flags = \STREAM_SERVER_BIND | \STREAM_SERVER_LISTEN, $context = null)
+function stream_socket_server(string $local_socket, ?int &$errno = null, ?string &$errstr = null, int $flags = \STREAM_SERVER_BIND | \STREAM_SERVER_LISTEN, $context = null)
 {
     \error_clear_last();
     if ($context !== null) {

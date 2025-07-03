@@ -76,7 +76,7 @@ function msql_close($link_identifier = null) : void
  * @throws MsqlException
  *
  */
-function msql_connect(string $hostname = null)
+function msql_connect(?string $hostname = null)
 {
     \error_clear_last();
     if ($hostname !== null) {
@@ -342,7 +342,7 @@ function msql_free_result($result) : void
  * @throws MsqlException
  *
  */
-function msql_pconnect(string $hostname = null)
+function msql_pconnect(?string $hostname = null)
 {
     \error_clear_last();
     if ($hostname !== null) {

@@ -83,13 +83,13 @@ function pspell_clear_session(int $dictionary_link) : void
  * @throws PspellException
  *
  */
-function pspell_config_create(string $language, string $spelling = null, string $jargon = null, string $encoding = null) : int
+function pspell_config_create(string $language, ?string $spelling = null, ?string $jargon = null, ?string $encoding = null) : int
 {
     \error_clear_last();
     if ($encoding !== null) {
-        $result = \pspell_config_create($language, $spelling, $jargon, $encoding);
+        $result = \pspell_config_create($language, (string) $spelling, (string) $jargon, $encoding);
     } elseif ($jargon !== null) {
-        $result = \pspell_config_create($language, $spelling, $jargon);
+        $result = \pspell_config_create($language, (string) $spelling, $jargon);
     } elseif ($spelling !== null) {
         $result = \pspell_config_create($language, $spelling);
     } else {
@@ -365,15 +365,15 @@ function pspell_new_config(int $config) : int
  * @throws PspellException
  *
  */
-function pspell_new(string $language, string $spelling = null, string $jargon = null, string $encoding = null, int $mode = 0) : int
+function pspell_new(string $language, ?string $spelling = null, ?string $jargon = null, ?string $encoding = null, int $mode = 0) : int
 {
     \error_clear_last();
     if ($mode !== 0) {
-        $result = \pspell_new($language, $spelling, $jargon, $encoding, $mode);
+        $result = \pspell_new($language, (string) $spelling, (string) $jargon, (string) $encoding, $mode);
     } elseif ($encoding !== null) {
-        $result = \pspell_new($language, $spelling, $jargon, $encoding);
+        $result = \pspell_new($language, (string) $spelling, (string) $jargon, $encoding);
     } elseif ($jargon !== null) {
-        $result = \pspell_new($language, $spelling, $jargon);
+        $result = \pspell_new($language, (string) $spelling, $jargon);
     } elseif ($spelling !== null) {
         $result = \pspell_new($language, $spelling);
     } else {

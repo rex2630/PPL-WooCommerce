@@ -22,7 +22,7 @@ use PPLCZVendor\Safe\Exceptions\YamlException;
  * @throws YamlException
  *
  */
-function yaml_parse_file(string $filename, int $pos = 0, ?int &$ndocs = null, array $callbacks = null)
+function yaml_parse_file(string $filename, int $pos = 0, ?int &$ndocs = null, ?array $callbacks = null)
 {
     \error_clear_last();
     $result = \yaml_parse_file($filename, $pos, $ndocs, $callbacks);
@@ -53,7 +53,7 @@ function yaml_parse_file(string $filename, int $pos = 0, ?int &$ndocs = null, ar
  * @throws YamlException
  *
  */
-function yaml_parse_url(string $url, int $pos = 0, ?int &$ndocs = null, array $callbacks = null)
+function yaml_parse_url(string $url, int $pos = 0, ?int &$ndocs = null, ?array $callbacks = null)
 {
     \error_clear_last();
     $result = \yaml_parse_url($url, $pos, $ndocs, $callbacks);
@@ -81,7 +81,7 @@ function yaml_parse_url(string $url, int $pos = 0, ?int &$ndocs = null, array $c
  * @throws YamlException
  *
  */
-function yaml_parse(string $input, int $pos = 0, ?int &$ndocs = null, array $callbacks = null)
+function yaml_parse(string $input, int $pos = 0, ?int &$ndocs = null, ?array $callbacks = null)
 {
     \error_clear_last();
     $result = \yaml_parse($input, $pos, $ndocs, $callbacks);

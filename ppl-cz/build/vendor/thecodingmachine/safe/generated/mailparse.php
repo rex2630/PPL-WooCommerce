@@ -25,7 +25,7 @@ use PPLCZVendor\Safe\Exceptions\MailparseException;
  * @throws MailparseException
  *
  */
-function mailparse_msg_extract_part_file($mimemail, $filename, callable $callbackfunc = null) : string
+function mailparse_msg_extract_part_file($mimemail, $filename, ?callable $callbackfunc = null) : string
 {
     \error_clear_last();
     if ($callbackfunc !== null) {

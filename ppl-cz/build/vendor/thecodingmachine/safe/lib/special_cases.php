@@ -147,10 +147,10 @@ function apcu_fetch($key)
  * @throws PcreException
  *
  */
-function preg_replace($pattern, $replacement, $subject, int $limit = -1, int &$count = null)
+function preg_replace($pattern, $replacement, $subject, int $limit = -1, ?int &$count = null)
 {
     \error_clear_last();
-    $result = \preg_replace($pattern, $replacement, $subject, $limit, $count);
+    $result = \preg_replace($pattern, (string) $replacement, $subject, $limit, $count);
     if (\preg_last_error() !== PREG_NO_ERROR || $result === null) {
         throw PcreException::createFromPhpError();
     }
@@ -159,9 +159,8 @@ function preg_replace($pattern, $replacement, $subject, int $limit = -1, int &$c
 /**
  * @param resource|null $dir_handle
  * @return string|false
- * @deprecated
- * This function is only in safe because the php documentation is wrong
  */
+#[\Deprecated]
 function readdir($dir_handle = null)
 {
     if ($dir_handle !== null) {
